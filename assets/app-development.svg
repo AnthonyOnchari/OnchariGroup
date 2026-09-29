@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">App development illustration</title>
+  <desc id="desc">A creative team designs a mobile app interface together.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#7488ff"/><stop offset="1" stop-color="#899bff"/></linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#afc6ff"/><stop offset="1" stop-color="#dce6ff"/></linearGradient>
+  </defs>
+  <rect width="1200" height="680" fill="url(#bg)"/>
+  <g fill="#dbe2ff" opacity=".55"><circle cx="132" cy="175" r="10"/><circle cx="315" cy="85" r="7"/><circle cx="1022" cy="180" r="10"/><circle cx="1080" cy="500" r="7"/><circle cx="180" cy="510" r="8"/></g>
+  <g fill="none" stroke="#dce4ff" stroke-width="5" opacity=".75"><circle cx="250" cy="235" r="72"/><path d="M250 142v22m0 142v22m-93-93h22m142 0h22m-159-66 16 16m100 100 16 16m0-132-16 16m-100 100-16 16"/><circle cx="975" cy="133" r="57"/><path d="M975 92v41l27 22" stroke-linecap="round"/></g>
+  <g transform="translate(426 46)">
+    <rect x="0" y="0" width="348" height="574" rx="42" fill="#f8f9ff" stroke="#3047a9" stroke-width="10"/>
+    <rect x="17" y="20" width="314" height="530" rx="30" fill="#fff"/>
+    <rect x="120" y="31" width="108" height="12" rx="6" fill="#d9def4"/>
+    <rect x="42" y="77" width="264" height="160" rx="20" fill="url(#screen)"/>
+    <circle cx="257" cy="118" r="26" fill="#f5f7ff"/>
+    <path d="m54 218 72-96 57 67 35-43 72 72Z" fill="#fff"/>
+    <rect x="43" y="259" width="95" height="67" rx="13" fill="#eaf0ff" stroke="#4c61c9" stroke-width="3"/>
+    <path d="m65 290 14-13-14-12m29 26 14-26" fill="none" stroke="#4c61c9" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="153" y="259" width="153" height="67" rx="13" fill="#edf1ff" stroke="#9eb1ed" stroke-width="3" stroke-dasharray="8 7"/>
+    <rect x="43" y="345" width="263" height="107" rx="16" fill="#304bb5"/>
+    <rect x="43" y="345" width="263" height="22" rx="14" fill="#125cc2"/>
+    <circle cx="273" cy="356" r="3" fill="#fff"/><circle cx="287" cy="356" r="3" fill="#fff"/><circle cx="300" cy="356" r="3" fill="#fff"/>
+    <rect x="57" y="380" width="88" height="57" rx="7" fill="#fff"/><path d="M160 387h127m-127 17h104m-104 17h118" stroke="#9db6ff" stroke-width="8" stroke-linecap="round"/>
+    <rect x="43" y="472" width="263" height="57" rx="14" fill="#e7edff" stroke="#a6b8ed" stroke-width="3" stroke-dasharray="8 7"/>
+  </g>
+  <g transform="translate(236 390)">
+    <path d="M34 70h142v92H34z" fill="#092b65"/><path d="M42 78h126v72H42z" fill="#1265c8"/><path d="M20 164h168l-14 15H35z" fill="#263f8f"/>
+    <circle cx="94" cy="24" r="27" fill="#f2a18f"/><path d="M66 24q2-42 54-27l14 25-16-9-11-15q-11 17-39 21Z" fill="#062a61"/>
+    <path d="M62 54q32-21 64 0l29 66-28 12-17-39v70H52v-70l-18 40-25-14z" fill="#0780e5"/>
+    <path d="m125 65 20 38 28 15-7 13-38-12-28-39" fill="#f2a18f"/>
+    <path d="m59 160-7 62-32 70h37l34-63 5-69m22 0 7 68 30 64h-37l-31-57-4-75" fill="#08285d"/>
+    <path d="M18 290h38l8 12H13zm97-1h37l11 12h-48z" fill="#f1f4ff"/>
+  </g>
+  <g transform="translate(850 295)">
+    <circle cx="99" cy="34" r="30" fill="#ed9a8b"/><path d="M69 31q0-42 55-27l14 30-17-3-8-14q-12 15-42 14Z" fill="#092b65"/>
+    <path d="M65 68q35-18 69 3l30 117-40 13-17-57-2 90H59l5-93-24 58-38-13z" fill="#f7f9ff"/>
+    <path d="M87 230h38l-5 89h-39zm-28 91h45v13H52zm54-91h36l21 83h-38z" fill="#08285d"/>
+    <path d="M127 310h40l12 13h-49z" fill="#f4f5ff"/>
+    <path d="M18 138h140v82H18z" fill="#0c5fc6"/><path d="M29 148h118v63H29z" fill="#1685ef"/><path d="M3 220h165l-16 15H17z" fill="#243f92"/>
+  </g>
+  <g fill="none" stroke="#f5f7ff" stroke-width="4" opacity=".9"><rect x="84" y="274" width="94" height="90" rx="14"/><path d="m126 297-14 21 14 18m13-39 15 21-15 18"/><path d="M885 250h135a14 14 0 0 1 14 14v28a14 14 0 0 1-14 14h-70l-22 19v-19h-43a14 14 0 0 1-14-14v-28a14 14 0 0 1 14-14Z"/></g>
+  <g fill="#f6f8ff"><rect x="197" y="104" width="13" height="13" rx="2"/><rect x="219" y="104" width="13" height="13" rx="2"/><rect x="241" y="104" width="13" height="13" rx="2"/><rect x="1000" y="536" width="15" height="15" rx="2"/><rect x="1024" y="536" width="15" height="15" rx="2"/><rect x="1048" y="536" width="15" height="15" rx="2"/></g>
+  <path d="M70 628h1060" stroke="#edf1ff" stroke-width="4" opacity=".9"/>
+</svg>

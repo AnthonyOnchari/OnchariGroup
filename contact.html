@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact | Onchari Group</title>
+    <meta name="description" content="Request a quote or contact Onchari Group for your website, media, branding or real estate marketing needs." />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-page="contact">
+    <header class="site-header">
+      <div class="container navbar">
+        <a class="brand" href="index.html" aria-label="Onchari Group home">
+          <span class="brand-mark"></span>
+          <span>Onchari Group</span>
+        </a>
+
+        <nav class="nav-links" aria-label="Main navigation">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="work.html">Work</a>
+          <a href="contact.html" class="active">Contact</a>
+        </nav>
+
+        <div class="nav-actions">
+          <a class="button" href="contact.html">Request a quote</a>
+          <button class="mobile-toggle" type="button" aria-label="Toggle navigation menu">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="container mobile-menu" aria-label="Mobile navigation">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="work.html">Work</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="section">
+        <div class="container">
+          <div class="section-header">
+            <div>
+              <span class="kicker">Get in touch</span>
+              <h2>Request a quote or place an order.</h2>
+            </div>
+            <p class="section-copy">Tell us what you need and we will guide you on the right package, timeline and next steps.</p>
+          </div>
+
+          <div class="contact-layout">
+            <div class="info-card">
+              <img class="contact-photo" src="assets/production-team.jpg" alt="Onchari Group crew preparing a production" loading="lazy" />
+              <h3>Let’s talk about your project</h3>
+              <p>Whether you need a website, media production, a property marketing package or a website refresh, Onchari Group can help.</p>
+
+              <ul class="contact-list">
+                <li>
+                  <span class="label">Email</span>
+                  <span class="value">info.onchari@gmail.com</span>
+                </li>
+                <li>
+                  <span class="label">Phone</span>
+                  <span class="value">+254 701 807 001</span>
+                </li>
+                <li>
+                  <span class="label">Location</span>
+                  <span class="value">Utawala, Nairobi, Kenya</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="form-card">
+              <form data-form="quote">
+                <div class="field">
+                  <label for="name">Full name</label>
+                  <input id="name" type="text" placeholder="Your name" required />
+                </div>
+
+                <div class="field">
+                  <label for="company">Business or brand</label>
+                  <input id="company" type="text" placeholder="Business name" />
+                </div>
+
+                <div class="field">
+                  <label for="service">Service needed</label>
+                  <select id="service">
+                    <option>Website design</option>
+                    <option>Photography</option>
+                    <option>Videography</option>
+                    <option>Branding / Social media</option>
+                    <option>Real estate marketing</option>
+                    <option>Custom project</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="budget">Budget range</label>
+                  <select id="budget">
+                    <option>KES 15,000 – 30,000</option>
+                    <option>KES 30,000 – 60,000</option>
+                    <option>KES 60,000 – 120,000</option>
+                    <option>Custom / not sure yet</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="message">Project details</label>
+                  <textarea id="message" placeholder="Tell us about your project, timeline and what you need help with." required></textarea>
+                </div>
+
+                <button class="button" type="submit">Send request</button>
+                <div class="form-message" aria-live="polite"></div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" style="background: var(--surface); border-top: 1px solid var(--line);">
+        <div class="container">
+          <div class="section-header">
+            <div>
+              <span class="kicker">How it works</span>
+              <h2>Simple process for ordering your project.</h2>
+            </div>
+          </div>
+
+          <div class="order-steps">
+            <div class="order-step">
+              <strong>01</strong>
+              <h3>Share your needs</h3>
+              <p>Send details about your goal, target audience and any examples you like.</p>
+            </div>
+
+            <div class="order-step">
+              <strong>02</strong>
+              <h3>Receive a quote</h3>
+              <p>We review your scope and provide a clear recommendation and quote.</p>
+            </div>
+
+            <div class="order-step">
+              <strong>03</strong>
+              <h3>Launch and support</h3>
+              <p>We deliver the work, refine the final product and keep things moving after launch.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-row">
+        <span>© <span id="year"></span> Onchari Group</span>
+        <div class="footer-links">
+          <a href="about.html">About</a>
+          <a href="work.html">Work</a>
+          <a href="contact.html">Contact</a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
