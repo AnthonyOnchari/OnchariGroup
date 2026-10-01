@@ -6,13 +6,14 @@
     <title>Contact | Onchari Group</title>
     <meta name="description" content="Request a quote or contact Onchari Group for your website, media, branding or real estate marketing needs." />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" type="image/png" href="assets/logo/Onchari Group Logo white bg (1).png" />
   </head>
   <body data-page="contact">
     <header class="site-header">
       <div class="container navbar">
         <a class="brand" href="index.html" aria-label="Onchari Group home">
-          <span class="brand-mark"></span>
-          <span>Onchari Group</span>
+          <img class="brand-logo" src="assets/logo/Onchari Group Logo Sil.png" alt="" />
+          <span>ONCHARI GROUP</span>
         </a>
 
         <nav class="nav-links" aria-label="Main navigation">
@@ -23,7 +24,7 @@
         </nav>
 
         <div class="nav-actions">
-          <a class="button" href="contact.html">Request a quote</a>
+          <a class="button" href="#chat" onclick="openQuoteChat(); return false;">Request a quote</a>
           <button class="mobile-toggle" type="button" aria-label="Toggle navigation menu">
             <span></span><span></span><span></span>
           </button>
@@ -58,15 +59,19 @@
               <ul class="contact-list">
                 <li>
                   <span class="label">Email</span>
-                  <span class="value">info.onchari@gmail.com</span>
+                  <a class="value" href="mailto:oncharigroup@gmail.com">oncharigroup@gmail.com</a>
                 </li>
                 <li>
                   <span class="label">Phone</span>
-                  <span class="value">+254 701 807 001</span>
+                  <a class="value" href="tel:+254750600715">+254 750 600 715</a>
                 </li>
                 <li>
                   <span class="label">Location</span>
                   <span class="value">Utawala, Nairobi, Kenya</span>
+                </li>
+                <li>
+                  <span class="label">Follow</span>
+                  <span class="value contact-socials"><a class="social-icon social-facebook" href="https://www.facebook.com/oncharigroup" target="_blank" rel="noopener noreferrer" aria-label="Facebook">f</a><a class="social-icon social-instagram" href="https://www.instagram.com/oncharigroup" target="_blank" rel="noopener noreferrer" aria-label="Instagram">◎</a><a class="social-icon social-tiktok" href="https://www.tiktok.com/@oncharigroup?is_from_webapp=1&amp;sender_device=pc" target="_blank" rel="noopener noreferrer" aria-label="TikTok">♪</a></span>
                 </li>
               </ul>
             </div>
@@ -151,13 +156,13 @@
     </main>
 
     <footer class="site-footer">
-      <div class="container footer-row">
-        <span>© <span id="year"></span> Onchari Group</span>
-        <div class="footer-links">
-          <a href="about.html">About</a>
-          <a href="work.html">Work</a>
-          <a href="contact.html">Contact</a>
+      <div class="container">
+        <div class="footer-main">
+          <div class="footer-brand"><a class="brand" href="index.html" aria-label="Onchari Group home"><img class="brand-logo" src="assets/logo/Onchari Group Logo Sil.png" alt="" /><span>ONCHARI GROUP</span></a><p>Digital experiences, media and design for businesses ready to grow.</p></div>
+          <div class="footer-column"><span class="footer-label">Explore</span><a href="about.html">About us</a><a href="work.html">Our work</a><a href="contact.html">Contact</a><a href="terms.html">Terms &amp; privacy</a></div>
+          <div class="footer-column"><span class="footer-label">Start a conversation</span><a href="mailto:oncharigroup@gmail.com">oncharigroup@gmail.com</a><a href="tel:+254750600715">+254 750 600 715</a><div class="social-icons" aria-label="Social media"><a class="social-icon social-facebook" href="https://www.facebook.com/oncharigroup" target="_blank" rel="noopener noreferrer" aria-label="Facebook">f</a><a class="social-icon social-instagram" href="https://www.instagram.com/oncharigroup" target="_blank" rel="noopener noreferrer" aria-label="Instagram">◎</a><a class="social-icon social-tiktok" href="https://www.tiktok.com/@oncharigroup?is_from_webapp=1&amp;sender_device=pc" target="_blank" rel="noopener noreferrer" aria-label="TikTok">♪</a></div><span>Utawala, Nairobi, Kenya</span></div>
         </div>
+        <div class="footer-row"><span>© <span id="year"></span> Onchari Group. All rights reserved.</span></div>
       </div>
     </footer>
 

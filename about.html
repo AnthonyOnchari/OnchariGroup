@@ -6,13 +6,14 @@
     <title>About | Onchari Group</title>
     <meta name="description" content="Learn about Onchari Group, our story, mission and the services we offer to businesses and clients in Kenya and beyond." />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" type="image/png" href="assets/logo/Onchari Group Logo white bg (1).png" />
   </head>
   <body data-page="about">
     <header class="site-header">
       <div class="container navbar">
         <a class="brand" href="index.html" aria-label="Onchari Group home">
-          <span class="brand-mark"></span>
-          <span>Onchari Group</span>
+          <img class="brand-logo" src="assets/logo/Onchari Group Logo Sil.png" alt="" />
+          <span>ONCHARI GROUP</span>
         </a>
 
         <nav class="nav-links" aria-label="Main navigation">
@@ -23,7 +24,7 @@
         </nav>
 
         <div class="nav-actions">
-          <a class="button" href="contact.html">Request a quote</a>
+          <a class="button" href="#chat" onclick="openQuoteChat(); return false;">Request a quote</a>
           <button class="mobile-toggle" type="button" aria-label="Toggle navigation menu">
             <span></span><span></span><span></span>
           </button>
@@ -39,137 +40,116 @@
     </header>
 
     <main>
-      <section class="section">
+      <section class="about-intro">
         <div class="container">
-          <div class="section-header">
-            <div>
-              <span class="kicker">About us</span>
-              <h2>We build digital experiences that help businesses grow.</h2>
+          <div class="about-intro-grid">
+            <div class="about-intro-copy">
+              <span class="kicker">About Onchari Group</span>
+              <p class="about-tagline">A creative partner led by Anthony Onchari.</p>
+              <p class="lead">We help businesses turn rough ideas into websites, visuals and digital experiences people can trust.</p>
+              <div class="about-intro-actions">
+                <a class="button" href="contact.html">Work with us</a>
+              </div>
             </div>
-            <p class="section-copy">Onchari Group is a digital-first company focused on helping brands look better, communicate clearly and convert more attention into real results.</p>
+
+            <figure class="about-hero-image">
+              <img src="assets/abt%20us.jpg" alt="Anthony Onchari and the Onchari Group team" />
+              <figcaption>Anthony Onchari · Founder</figcaption>
+            </figure>
+
           </div>
 
-          <div class="two-col">
-            <div>
-              <p class="lead">Onchari Group brings together web design, media production, social content and digital marketing to support businesses, creators and growing brands. We believe a strong online presence should do more than look good — it should help people trust you, understand what you offer and take action.</p>
-              <div class="pill-list">
-                <span>Website Development</span>
-                <span>Brand Design</span>
-                <span>Photography</span>
-                <span>Videography</span>
-                <span>Real Estate Marketing</span>
-                <span>Social Media Growth</span>
-              </div>
-            </div>
-
-            <div class="stat-grid">
-              <div class="stat-box">
-                <strong>4+</strong>
-                <span>Years of creative and digital experience</span>
-              </div>
-              <div class="stat-box">
-                <strong>4</strong>
-                <span>Core service areas</span>
-              </div>
-              <div class="stat-box">
-                <strong>100%</strong>
-                <span>Brand-focused approach</span>
-              </div>
-            </div>
-          </div>
-          <figure class="about-photo">
-            <img src="assets/founder-portrait.jpg" alt="Portrait from the Onchari Group creative team" loading="lazy" />
-            <figcaption>Independent thinking. Collective creativity.</figcaption>
-          </figure>
-        </div>
-      </section>
-
-      <section class="section" style="background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
-        <div class="container">
-          <div class="section-header">
-            <div>
-              <span class="kicker">Our story</span>
-              <h2>Creative thinking backed by practical execution.</h2>
-            </div>
-          </div>
-
-          <div class="timeline">
-            <div class="timeline-item">
-              <div class="time">2025 – Now</div>
-              <div>
-                <h3>Digital growth and company operations</h3>
-                <span class="org">Onchari Group</span>
-                <p>Supporting businesses with digital presence, campaign visibility and visually strong content systems that improve credibility and reach.</p>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <div class="time">2024 – 2025</div>
-              <div>
-                <h3>Website development and media production</h3>
-                <span class="org">Client partnerships</span>
-                <p>Building responsive business websites, product marketing pages and visual content for brands needing a stronger online identity.</p>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <div class="time">2022 – 2025</div>
-              <div>
-                <h3>Event coverage and storytelling</h3>
-                <span class="org">Community and brand projects</span>
-                <p>Creating visual stories for events, businesses and personal brands through photography, videography and editing.</p>
-              </div>
+          <div class="about-proof">
+            <p>Clear thinking, careful execution and a real person behind the work.</p>
+            <div class="about-proof-stats">
+              <div><strong>5+</strong><span>Years of experience</span></div>
+              <div><strong>3</strong><span>Ways to move forward</span></div>
+              <div><strong>1</strong><span>Focused creative partner</span></div>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="section">
+      <section class="about-brief">
+        <div class="container about-brief-inner">
+          <span class="kicker">Who we are</span>
+          <div>
+            <h2>We make businesses easier to see, understand and remember.</h2>
+            <p>Onchari Group is a Nairobi-based creative and digital company led by Anthony Onchari. We create websites, photography, video, design and digital marketing that help businesses and creators show up with confidence.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section about-capabilities">
         <div class="container">
           <div class="section-header">
             <div>
-              <span class="kicker">Why choose us</span>
-              <h2>One company, multiple growth tools.</h2>
+              <span class="kicker">What we bring</span>
             </div>
           </div>
 
-          <div class="service-grid">
+          <div class="about-capability-grid">
             <article class="service-card">
               <div class="icon">01</div>
-              <h3>Modern websites</h3>
-              <p>Fast, responsive websites designed to represent your brand and convert visitors into inquiries.</p>
+              <h3>Digital foundations</h3>
+              <p>Websites that make your offer easy to understand and act on.</p>
             </article>
 
             <article class="service-card">
               <div class="icon">02</div>
-              <h3>Visual storytelling</h3>
-              <p>Photos and videos that communicate your values, products and professionalism with confidence.</p>
+              <h3>Visual direction</h3>
+              <p>Photography, video and design that make the brand feel alive.</p>
             </article>
 
             <article class="service-card">
               <div class="icon">03</div>
-              <h3>Business promotion</h3>
-              <p>Content strategy and social visibility support to help your business stay consistent and discoverable.</p>
+              <h3>Clear promotion</h3>
+              <p>Content and campaigns that help the right people notice you.</p>
             </article>
 
             <article class="service-card">
               <div class="icon">04</div>
-              <h3>Property marketing</h3>
-              <p>Presentation and digital exposure for properties, agencies and real estate opportunities.</p>
+              <h3>Property presence</h3>
+              <p>Stronger presentation for properties, listings and real estate brands.</p>
             </article>
           </div>
+        </div>
+      </section>
+
+      <section class="about-closing">
+        <div class="container about-closing-inner">
+          <div class="about-closing-copy">
+            <span class="about-quote-mark">“</span>
+            <span class="kicker">A note from the founder</span>
+            <p>Every business has a story worth seeing. My role is to help you tell it with clarity, confidence and work that makes people want to come closer.</p>
+          </div>
+          <figure class="about-closing-founder">
+            <img src="assets/founder-portrait.jpg" alt="Portrait of Anthony Onchari, the person behind Onchari Group" />
+            <figcaption><strong>Anthony Onchari</strong><span>Founder, Onchari Group</span></figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="about-terms-callout">
+        <div class="container about-terms-inner">
+          <div>
+            <span class="kicker">Working with us</span>
+            <h2>Clear expectations from the start.</h2>
+            <p>Review our booking, payment, usage rights and privacy terms before beginning a project.</p>
+          </div>
+          <a class="button" href="terms.html">View Terms &amp; Privacy</a>
         </div>
       </section>
     </main>
 
     <footer class="site-footer">
-      <div class="container footer-row">
-        <span>© <span id="year"></span> Onchari Group</span>
-        <div class="footer-links">
-          <a href="about.html">About</a>
-          <a href="work.html">Work</a>
-          <a href="contact.html">Contact</a>
+      <div class="container">
+        <div class="footer-main">
+          <div class="footer-brand"><a class="brand" href="index.html" aria-label="Onchari Group home"><img class="brand-logo" src="assets/logo/Onchari Group Logo Sil.png" alt="" /><span>ONCHARI GROUP</span></a><p>Digital experiences, media and design for businesses ready to grow.</p></div>
+          <div class="footer-column"><span class="footer-label">Explore</span><a href="about.html">About us</a><a href="work.html">Our work</a><a href="contact.html">Contact</a><a href="terms.html">Terms &amp; privacy</a></div>
+          <div class="footer-column"><span class="footer-label">Start a conversation</span><a href="mailto:oncharigroup@gmail.com">oncharigroup@gmail.com</a><a href="tel:+254750600715">+254 750 600 715</a><div class="social-icons" aria-label="Social media"><a class="social-icon social-facebook" href="https://www.facebook.com/oncharigroup" target="_blank" rel="noopener noreferrer" aria-label="Facebook">f</a><a class="social-icon social-instagram" href="https://www.instagram.com/oncharigroup" target="_blank" rel="noopener noreferrer" aria-label="Instagram">◎</a><a class="social-icon social-tiktok" href="https://www.tiktok.com/@oncharigroup?is_from_webapp=1&amp;sender_device=pc" target="_blank" rel="noopener noreferrer" aria-label="TikTok">♪</a></div><span>Utawala, Nairobi, Kenya</span></div>
         </div>
+        <div class="footer-row"><span>© <span id="year"></span> Onchari Group. All rights reserved.</span></div>
       </div>
     </footer>
 

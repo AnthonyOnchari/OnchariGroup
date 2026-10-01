@@ -6,13 +6,14 @@
     <title>Work | Onchari Group</title>
     <meta name="description" content="See examples of Onchari Group projects, from websites and portfolio work to media, campaigns and branding support." />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" type="image/png" href="assets/logo/Onchari Group Logo white bg (1).png" />
   </head>
   <body data-page="work">
     <header class="site-header">
       <div class="container navbar">
         <a class="brand" href="index.html" aria-label="Onchari Group home">
-          <span class="brand-mark"></span>
-          <span>Onchari Group</span>
+          <img class="brand-logo" src="assets/logo/Onchari Group Logo Sil.png" alt="" />
+          <span>ONCHARI GROUP</span>
         </a>
 
         <nav class="nav-links" aria-label="Main navigation">
@@ -23,7 +24,7 @@
         </nav>
 
         <div class="nav-actions">
-          <a class="button" href="contact.html">Request a quote</a>
+          <a class="button" href="#chat" onclick="openQuoteChat(); return false;">Request a quote</a>
           <button class="mobile-toggle" type="button" aria-label="Toggle navigation menu">
             <span></span><span></span><span></span>
           </button>
@@ -39,88 +40,49 @@
     </header>
 
     <main>
-      <section class="section">
+      <section class="section what-we-do work-services" style="background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
         <div class="container">
           <div class="section-header">
             <div>
-              <span class="kicker">Our work</span>
-              <h2>Selected work and project types.</h2>
-            </div>
-            <p class="section-copy">We create digital and visual work that helps businesses present themselves clearly, stand out and convert better.</p>
-          </div>
-
-          <div class="project-grid">
-            <article class="project-card">
-              <div class="project-header">
-                <div class="project-dots"><span></span><span></span><span></span></div>
-                <span>lafamillejerant.store</span>
-              </div>
-              <div class="project-thumb"><img src="assets/portrait-session.jpg" alt="Fashion portrait from a client photo session" loading="lazy" /></div>
-              <div class="project-meta">
-                <h3>La Famille Jerant</h3>
-                <span>E-commerce / Fashion brand</span>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="project-header">
-                <div class="project-dots"><span></span><span></span><span></span></div>
-                <span>brand-story.com</span>
-              </div>
-              <div class="project-thumb"><img src="assets/event-story.jpg" alt="Event photography captured by Onchari Group" loading="lazy" /></div>
-              <div class="project-meta">
-                <h3>Brand Storytelling</h3>
-                <span>Content / Campaigns</span>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="project-header">
-                <div class="project-dots"><span></span><span></span><span></span></div>
-                <span>property-listing.co.ke</span>
-              </div>
-              <div class="project-thumb"><img src="assets/production-team.jpg" alt="Production crew preparing a shoot" loading="lazy" /></div>
-              <div class="project-meta">
-                <h3>Property Marketing</h3>
-                <span>Real estate / Listings</span>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" style="background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
-        <div class="container">
-          <div class="section-header">
-            <div>
-              <span class="kicker">Project types</span>
-              <h2>We handle multiple kinds of digital work.</h2>
+              <span class="kicker">What we do</span>
             </div>
           </div>
 
-          <div class="feature-grid">
-            <article class="feature-card">
-              <div class="icon">WEB</div>
-              <h3>Business Websites</h3>
-              <p>Modern, user-friendly websites for small businesses, agencies and growing brands.</p>
+          <div class="feature-grid service-showcase">
+            <article class="feature-card service-feature">
+              <div class="service-browser-header"><div class="project-dots"><span></span><span></span><span></span></div><span>oncharigroup.com / websites</span></div>
+              <div class="service-image service-image-web"><img src="assets/web%20design.webp" alt="Website design project preview" loading="eager" decoding="async" /></div>
+              <div class="service-feature-copy"><h3>Website design</h3><p>Polished websites that help your business grow online.</p><a class="service-more" href="#service-showcase" data-service-showcase="website">Explore service</a></div>
             </article>
 
-            <article class="feature-card">
-              <div class="icon">PHOTO</div>
-              <h3>Photography</h3>
-              <p>Portrait, product and event photography that presents your business with confidence.</p>
+            <article class="feature-card service-feature">
+              <div class="service-browser-header"><div class="project-dots"><span></span><span></span><span></span></div><span>oncharigroup.com / photography</span></div>
+              <div class="service-image"><img src="assets/photo%20cam%20.jpg" alt="Photography camera used for a client session" loading="eager" decoding="async" /></div>
+              <div class="service-feature-copy"><h3>Photography</h3><p>Professional images that make people and products shine.</p><a class="service-more" href="#service-showcase" data-service-showcase="photography">Explore service</a></div>
             </article>
 
-            <article class="feature-card">
-              <div class="icon">VIDEO</div>
-              <h3>Videography</h3>
-              <p>Short-form promos, event coverage and visual storytelling designed to engage viewers.</p>
+            <article class="feature-card service-feature">
+              <div class="service-browser-header"><div class="project-dots"><span></span><span></span><span></span></div><span>oncharigroup.com / production</span></div>
+              <div class="service-image"><img src="assets/VIDEO%20cam%20.jpg" alt="Video camera used during a production" loading="eager" decoding="async" /></div>
+              <div class="service-feature-copy"><h3>Videography</h3><p>Short videos that bring your story and brand to life.</p><a class="service-more" href="#service-showcase" data-service-showcase="videography">Explore service</a></div>
             </article>
 
-            <article class="feature-card">
-              <div class="icon">SOFT</div>
-              <h3>Marketing Support</h3>
-              <p>Strategy, social-media content and digital visibility guidance for stronger brand presence.</p>
+            <article class="feature-card service-feature">
+              <div class="service-browser-header"><div class="project-dots"><span></span><span></span><span></span></div><span>oncharigroup.com / property</span></div>
+              <div class="service-image service-image-property"><img src="assets/Property%20marketing.jpg" alt="Property marketing project preview" loading="eager" decoding="async" /></div>
+              <div class="service-feature-copy"><h3>Property marketing</h3><p>Striking property visuals that attract serious buyers.</p><a class="service-more" href="#service-showcase" data-service-showcase="property">Explore service</a></div>
+            </article>
+
+            <article class="feature-card service-feature">
+              <div class="service-browser-header"><div class="project-dots"><span></span><span></span><span></span></div><span>oncharigroup.com / apps</span></div>
+              <div class="service-image service-image-app"><img src="assets/app%20dev.webp" alt="App development project preview" loading="eager" decoding="async" /></div>
+              <div class="service-feature-copy"><h3>App development</h3><p>Useful mobile experiences that keep people connected.</p><a class="service-more" href="#service-showcase" data-service-showcase="app">Explore service</a></div>
+            </article>
+
+            <article class="feature-card service-feature">
+              <div class="service-browser-header"><div class="project-dots"><span></span><span></span><span></span></div><span>oncharigroup.com / design</span></div>
+              <div class="service-image service-image-graphic"><img src="assets/poster%20design.jpg" alt="Poster design project preview" loading="eager" decoding="async" /></div>
+              <div class="service-feature-copy"><h3>Poster, logo &amp; graphic design</h3><p>Distinctive graphics that make your brand easy to remember.</p><a class="service-more" href="#service-showcase" data-service-showcase="design">Explore service</a></div>
             </article>
           </div>
         </div>
@@ -128,16 +90,16 @@
     </main>
 
     <footer class="site-footer">
-      <div class="container footer-row">
-        <span>© <span id="year"></span> Onchari Group</span>
-        <div class="footer-links">
-          <a href="about.html">About</a>
-          <a href="work.html">Work</a>
-          <a href="contact.html">Contact</a>
+      <div class="container">
+        <div class="footer-main">
+          <div class="footer-brand"><a class="brand" href="index.html" aria-label="Onchari Group home"><img class="brand-logo" src="assets/logo/Onchari Group Logo Sil.png" alt="" /><span>ONCHARI GROUP</span></a><p>Digital experiences, media and design for businesses ready to grow.</p></div>
+          <div class="footer-column"><span class="footer-label">Explore</span><a href="about.html">About us</a><a href="work.html">Our work</a><a href="contact.html">Contact</a><a href="terms.html">Terms &amp; privacy</a></div>
+          <div class="footer-column"><span class="footer-label">Start a conversation</span><a href="mailto:oncharigroup@gmail.com">oncharigroup@gmail.com</a><a href="tel:+254750600715">+254 750 600 715</a><div class="social-icons" aria-label="Social media"><a class="social-icon social-facebook" href="https://www.facebook.com/oncharigroup" target="_blank" rel="noopener noreferrer" aria-label="Facebook">f</a><a class="social-icon social-instagram" href="https://www.instagram.com/oncharigroup" target="_blank" rel="noopener noreferrer" aria-label="Instagram">◎</a><a class="social-icon social-tiktok" href="https://www.tiktok.com/@oncharigroup?is_from_webapp=1&amp;sender_device=pc" target="_blank" rel="noopener noreferrer" aria-label="TikTok">♪</a></div><span>Utawala, Nairobi, Kenya</span></div>
         </div>
+        <div class="footer-row"><span>© <span id="year"></span> Onchari Group. All rights reserved.</span></div>
       </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=showcase-modal"></script>
   </body>
 </html>
