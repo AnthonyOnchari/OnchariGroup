@@ -17,6 +17,17 @@ document.addEventListener('DOMContentLoaded', () => {
     menuToggle.addEventListener('click', () => {
       mobileMenu.classList.toggle('open');
     });
+
+    document.addEventListener('click', (event) => {
+      if (!mobileMenu.classList.contains('open')) return;
+      if (!mobileMenu.contains(event.target) && !menuToggle.contains(event.target)) {
+        mobileMenu.classList.remove('open');
+      }
+    });
+
+    mobileMenu.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    });
   }
 
   const year = document.getElementById('year');
