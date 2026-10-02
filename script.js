@@ -10,6 +10,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  document.querySelectorAll('.nav-links, .mobile-menu').forEach((navigation) => {
+    if (navigation.querySelector('a[href="account.html"]')) return;
+    const accountLink = document.createElement('a');
+    accountLink.href = 'account.html';
+    accountLink.textContent = 'Account';
+    if (page === 'account') accountLink.classList.add('active');
+    navigation.appendChild(accountLink);
+  });
+
   const menuToggle = document.querySelector('.mobile-toggle');
   const mobileMenu = document.querySelector('.mobile-menu');
 
@@ -281,14 +290,33 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (lower.includes('who made') || lower.includes('who created') || lower.includes('creator')) {
       addChatMessage('I was created by Anthony Onchari, the person behind Onchari Group. He brings the creative direction, the business sense and the “we can make this work” energy. I am proudly on his team.');
-    } else if (lower.includes('about onchari') || lower.includes('what is onchari') || lower.includes('tell me about the company') || lower.includes('all about us') || lower === 'company') {
-      addChatMessage('Onchari Group is a digital-first company based in Utawala, Nairobi, Kenya. Anthony Onchari leads the work, helping businesses, creators and personal projects build a stronger presence through websites, photography, videography, property marketing, app experiences and graphic design. The focus is simple: clear ideas, useful digital work and brands people can trust.');
+    } else if (lower.includes('who do you work with') || lower.includes('who are your clients') || lower.includes('who do you help') || lower.includes('target audience')) {
+      addChatMessage('Onchari works with businesses, creators and personal projects that need a clearer digital or visual presence. That can mean building a first website, refreshing a brand, creating photo or video content, promoting a property, or shaping a focused app experience.');
+    } else if (lower.includes('about onchari') || lower.includes('what is onchari') || lower.includes('tell me about the company') || lower.includes('all about us') || lower.includes('about us') || lower === 'company') {
+      addChatMessage('Onchari Group is a creative and digital company led by founder Anthony Onchari in Utawala, Nairobi, Kenya. With 5+ years of experience, the team helps businesses, creators and personal projects with website design, photography, videography, property marketing, app development, and logo, poster and graphic design. Work can be handled remotely too. The approach is to understand the goal, clarify the message, then create practical work that fits the brand.');
     } else if (lower.includes('mission') || lower.includes('believe') || lower.includes('approach') || lower.includes('values')) {
       addChatMessage('The Onchari approach is practical and human: understand the real goal, make the message clear, create work that feels like the brand, and keep the next step simple. Looking good matters, but helping the business move matters more.');
     } else if (lower.includes('how long') || lower.includes('years') || lower.includes('experience')) {
       addChatMessage('Onchari Group has more than five years of creative and digital work behind it, with experience across websites, visual content, campaigns, property marketing and brand communication.');
     } else if (lower.includes('founder') || lower.includes('owner') || lower.includes('anthony onchari')) {
       addChatMessage('Anthony Onchari is the founder and person behind Onchari Group. He brings together creative direction, digital execution and a business-first way of thinking to help clients turn ideas into something people can see and use.');
+    } else if (lower.includes('price') || lower.includes('cost') || lower.includes('how much') || lower.includes('pricing') || lower.includes('rates') || lower.includes('packages')) {
+      addChatMessage('Pricing depends on the project scope, such as the service, deliverables and level of production. I do not have a current price list to quote from, and I do not want to guess. Share what you need and Anthony’s team can recommend a suitable scope and provide a quote.');
+      lastTopic = 'project scope and pricing';
+    } else if (lower.includes('recommend') || lower.includes('suit my') || lower.includes('best service') || lower.includes('which service') || lower.includes('what service')) {
+      if (lower.includes('property') || lower.includes('real estate') || lower.includes('listing')) {
+        lastTopic = 'property marketing';
+        addChatMessage('For a property or listing, start with property marketing: strong listing visuals and clear digital presentation. Photography can support that too. Are you promoting one property or building a real estate brand?');
+      } else if (lower.includes('social') || lower.includes('content') || lower.includes('visibility') || lower.includes('audience')) {
+        lastTopic = 'brand content';
+        addChatMessage('If the goal is stronger visibility, a useful mix can be photography or short-form video, with design assets for campaigns. If people also need a place to learn more or enquire, pair that with a clear website. What are you promoting?');
+      } else if (lower.includes('website') || lower.includes('online') || lower.includes('launch') || lower.includes('customers') || lower.includes('business')) {
+        lastTopic = 'website design';
+        addChatMessage('If customers need a clear place to understand your offer and contact you, a business website is a strong starting point. Photography, design or video can support it when the brand also needs stronger visuals. What does your business do, and what should people do next?');
+      } else {
+        lastTopic = 'choosing a service';
+        addChatMessage('I can help narrow it down. Websites help explain an offer and guide enquiries; photography and video create visual content; design builds consistent brand assets; property marketing presents listings; and app development shapes focused mobile experiences. What are you trying to improve?');
+      }
     } else if (lower.includes('sell') || lower.includes('pitch') || lower.includes('convince') || lower.includes('why should i choose')) {
       addChatMessage('Here is the honest pitch: Onchari Group helps your business look credible, sound clear and get remembered. Website? Tunai. Photos? Clean. Video? Story iko sawa. You bring the ambition; I will help connect you with Anthony and the team.');
       leadStep = 1;
@@ -304,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
       addChatMessage('I am not human, and I do not have feelings, private memories or automatic live access to news, weather, social feeds or the internet. I can still think with you, explain Onchari Group clearly, help shape ideas and say when I am unsure.');
     } else if (lower.includes('latest') || lower.includes('real time') || lower.includes('live news') || lower.includes('weather')) {
       addChatMessage('I cannot verify live information from inside this website. I would rather say that clearly than guess. For an Onchari project, though, I can help you plan, compare options and prepare the right questions.');
-    } else if (lower.includes('quote') || lower.includes('price') || lower.includes('cost')) {
+    } else if (lower.includes('quote')) {
       leadStep = 1;
       addChatMessage('Absolutely. I can help get the conversation started. What is your name?');
     } else if ((lower.includes('website') || lower.includes('web design') || lower.includes('landing page')) && !lower.includes('find') && !lower.includes('where')) {

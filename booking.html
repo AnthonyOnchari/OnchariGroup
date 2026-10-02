@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Schedule a Booking | Onchari Group</title>
+    <meta name="description" content="Request a booking with Onchari Group, agree your project scope and prepare printable quote, invoice and payment receipt documents." />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" type="image/png" href="assets/logo/Onchari Group Logo white bg (1).png" />
+  </head>
+  <body data-page="booking">
+    <header class="site-header">
+      <div class="container navbar">
+        <a class="brand" href="index.html" aria-label="Onchari Group home">
+          <img class="brand-logo" src="assets/logo/Onchari Group Logo Sil.png" alt="" />
+          <span>ONCHARI GROUP</span>
+        </a>
+
+        <nav class="nav-links" aria-label="Main navigation">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="work.html">Work</a>
+          <a href="contact.html">Contact</a>
+          <a href="account.html">Account</a>
+        </nav>
+
+        <div class="nav-actions">
+          <a class="button" href="#booking-form">Book with us</a>
+          <button class="mobile-toggle" type="button" aria-label="Toggle navigation menu">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="container mobile-menu" aria-label="Mobile navigation">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="work.html">Work</a>
+        <a href="contact.html">Contact</a>
+        <a href="account.html">Account</a>
+      </div>
+    </header>
+
+    <main class="booking-page">
+      <section class="booking-intro">
+        <div class="container">
+          <span class="kicker">Book a project</span>
+          <h1>Let’s get the details in place.</h1>
+          <p>Tell us what you need and when you need it. We’ll check availability and agree the scope and price with you before confirming.</p>
+
+          <ol class="booking-steps" aria-label="Booking steps">
+            <li><span>01</span><strong>Share your brief</strong></li>
+            <li><span>02</span><strong>Confirm scope and date</strong></li>
+            <li><span>03</span><strong>Prepare your documents</strong></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="section booking-workflow">
+        <div class="container">
+          <div class="booking-panel">
+            <div class="booking-panel-heading">
+              <span class="booking-step-label">Step 1</span>
+              <div>
+                <h2>Your booking request</h2>
+                <p>Choose a service and share enough detail for us to plan the next step.</p>
+              </div>
+            </div>
+
+            <div class="booking-account-prompt">
+              <p><strong>Keep your project in one place.</strong> Create an account to save bookings, follow messages, and access quotes, invoices, receipts and shared files.</p>
+              <a href="account.html" target="_blank" rel="noopener noreferrer">Sign in or create an account</a>
+            </div>
+
+            <form id="booking-form">
+              <fieldset id="booking-fields" class="booking-fields">
+                <legend class="visually-hidden">Booking and contact details</legend>
+                <div class="booking-field-grid">
+                  <div class="field">
+                    <label for="booking-service">Service</label>
+                    <select id="booking-service" name="service" required>
+                      <option value="">Choose a service</option>
+                      <option>Website design</option>
+                      <option>Photography</option>
+                      <option>Videography</option>
+                      <option>Property marketing</option>
+                      <option>App development</option>
+                      <option>Branding and graphic design</option>
+                      <option>Social media growth</option>
+                      <option>Custom project</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="booking-title">Project or event name</label>
+                    <input id="booking-title" name="title" type="text" placeholder="e.g. Product launch photos" />
+                  </div>
+                  <div class="field">
+                    <label for="booking-date">Preferred date</label>
+                    <input id="booking-date" name="date" type="date" required />
+                  </div>
+                  <div class="field">
+                    <label for="booking-time">Preferred time</label>
+                    <select id="booking-time" name="time">
+                      <option value="Flexible">Flexible</option>
+                      <option>Morning</option>
+                      <option>Afternoon</option>
+                      <option>Evening</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="booking-format">Project format</label>
+                    <select id="booking-format" name="format">
+                      <option>On-site in Nairobi</option>
+                      <option>Remote</option>
+                      <option>At Onchari Group, Utawala</option>
+                      <option>To be agreed</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="booking-business">Business or brand</label>
+                    <input id="booking-business" name="business" type="text" placeholder="Optional" />
+                  </div>
+                  <div class="field booking-field-wide">
+                    <label for="booking-brief">What do you need?</label>
+                    <textarea id="booking-brief" name="brief" placeholder="Describe the project, deliverables, location or any important details." required></textarea>
+                  </div>
+                  <div class="field">
+                    <label for="booking-name">Your name</label>
+                    <input id="booking-name" name="name" type="text" autocomplete="name" required />
+                  </div>
+                  <div class="field">
+                    <label for="booking-email">Email</label>
+                    <input id="booking-email" name="email" type="email" autocomplete="email" />
+                  </div>
+                  <div class="field">
+                    <label for="booking-phone">Phone</label>
+                    <input id="booking-phone" name="phone" type="tel" autocomplete="tel" required />
+                  </div>
+                </div>
+                <p class="booking-disclosure">This sends a request, not a confirmed appointment. The team will confirm availability and final pricing with you directly. No payment is taken on this page.</p>
+                <button class="button" type="submit">Prepare booking request</button>
+              </fieldset>
+            </form>
+            <p id="booking-status" class="form-message" role="status" aria-live="polite"></p>
+
+            <div id="booking-confirmation" class="booking-confirmation" role="status" aria-live="polite" hidden>
+              <div>
+                <span id="booking-confirmation-label" class="booking-step-label">Request saved</span>
+                <h3 id="booking-confirmation-title">Your booking request is ready.</h3>
+                <p id="booking-confirmation-copy"></p>
+              </div>
+              <div class="booking-confirmation-actions">
+                <a id="booking-dashboard-link" class="button" href="account.html">Open my account</a>
+                <a id="booking-email-link" class="button-ghost" href="mailto:oncharigroup@gmail.com" hidden>Send request by email</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-main">
+          <div class="footer-brand"><a class="brand" href="index.html" aria-label="Onchari Group home"><img class="brand-logo" src="assets/logo/Onchari Group Logo Sil.png" alt="" /><span>ONCHARI GROUP</span></a><p>Digital experiences, media and design for businesses ready to grow.</p></div>
+          <div class="footer-column"><span class="footer-label">Explore</span><a href="about.html">About us</a><a href="work.html">Our work</a><a href="contact.html">Contact</a><a href="terms.html">Terms &amp; privacy</a></div>
+          <div class="footer-column"><span class="footer-label">Start a conversation</span><a href="mailto:oncharigroup@gmail.com">oncharigroup@gmail.com</a><a href="tel:+254750600715">+254 750 600 715</a><span>Utawala, Nairobi, Kenya</span></div>
+        </div>
+        <div class="footer-row"><span>© <span id="year"></span> Onchari Group. All rights reserved.</span></div>
+      </div>
+    </footer>
+
+    <script src="script.js" type="module"></script>
+    <script src="booking.js" type="module"></script>
+  </body>
+</html>
