@@ -170,10 +170,24 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   document.addEventListener('click', (event) => {
-    const trigger = event.target.closest('[data-service-showcase]');
+    const card = event.target.closest('.service-feature');
+    const trigger = event.target.closest('[data-service-showcase]') || card?.querySelector('[data-service-showcase]');
     if (!trigger) return;
     event.preventDefault();
     openShowcase(trigger.dataset.serviceShowcase);
+  });
+  document.querySelectorAll('.service-feature').forEach((card) => {
+    const trigger = card.querySelector('[data-service-showcase]');
+    const image = card.querySelector('.service-image');
+    if (!trigger || !image) return;
+    image.setAttribute('role', 'button');
+    image.setAttribute('tabindex', '0');
+    image.setAttribute('aria-label', `Open ${card.querySelector('h3')?.textContent || 'service'} gallery`);
+    image.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      openShowcase(trigger.dataset.serviceShowcase);
+    });
   });
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') closeShowcase();
