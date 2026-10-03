@@ -524,3 +524,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+const photoUrls = Object.values(import.meta.glob('./assets/WorksPhotos/*.{jpg,jpeg,png,webp}', { eager: true, query: '?url', import: 'default' }));
+const photoSlides = document.querySelectorAll('.home-team-photo-slide');
+
+if (photoSlides.length === 2 && photoUrls.length > 1) {
+  let current = 0;
+  let front = 0;
+  const showNext = () => {
+    const next = (current + 1) % photoUrls.length;
+    const incoming = photoSlides[1 - front];
+    const loader = new Image();
+    loader.onload = () => {
+      incoming.src = photoUrls[next];
+      photoSlides[front].classList.remove('is-active');
+      incoming.classList.add('is-active');
+      front = 1 - front;
+      current = next;
+    };
+    loader.src = photoUrls[next];
+  };
+  window.setInterval(showNext, 4500);
+}

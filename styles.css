@@ -178,6 +178,17 @@ button, input, textarea, select {
   color: var(--ink);
 }
 
+.mobile-menu .mobile-booking-link {
+  margin: 10px 0;
+  padding: 0.78rem 1rem;
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  text-align: center;
+}
+
 .hero {
   padding: 82px 0 76px;
 }
@@ -1085,18 +1096,17 @@ body[data-page="home"] .home-team-photo-slide {
   object-fit: cover;
   object-position: center 38%;
   opacity: 0;
-  animation: home-photo-zoom 18s ease-in-out infinite;
+  transition: opacity 1s ease;
 }
 
-body[data-page="home"] .home-team-photo-slide:nth-child(1) { animation-delay: 0s; }
-body[data-page="home"] .home-team-photo-slide:nth-child(2) { animation-delay: -6s; }
-body[data-page="home"] .home-team-photo-slide:nth-child(3) { animation-delay: -12s; }
+body[data-page="home"] .home-team-photo-slide.is-active {
+  opacity: 1;
+  animation: home-photo-zoom 4.5s ease-out forwards;
+}
 
 @keyframes home-photo-zoom {
-  0% { opacity: 1; transform: scale(1); }
-  27% { opacity: 1; transform: scale(1.1); }
-  33.333% { opacity: 0; transform: scale(1.13); }
-  100% { opacity: 0; transform: scale(1.13); }
+  from { transform: scale(1); }
+  to { transform: scale(1.1); }
 }
 
 body[data-page="home"] .home-team-feature-copy {
@@ -1122,13 +1132,8 @@ body[data-page="home"] .home-team-feature-copy > span:last-child span {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body[data-page="home"] .home-team-photo-slide {
+  body[data-page="home"] .home-team-photo-slide.is-active {
     animation: none;
-    transform: none;
-  }
-
-  body[data-page="home"] .home-team-photo-slide:first-child {
-    opacity: 1;
   }
 }
 
@@ -1653,7 +1658,8 @@ body[data-page="about"] .site-header {
 
 @media (max-width: 900px) {
   .hero-visual, .hero-visual > img { min-height: 320px; }
-  body[data-page="home"] .home-team-feature { display: none; }
+  body[data-page="home"] .home-team-feature { grid-template-columns: minmax(0, 1fr); }
+  body[data-page="home"] .home-team-photo-showcase { max-width: none; }
   .project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .project-thumb { height: 260px; }
   .about-intro-grid,
