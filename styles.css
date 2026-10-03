@@ -2634,3 +2634,16 @@ body[data-page="about"] .about-terms-callout { text-align: left; }
   .mobile-menu { display: block; position: absolute; top: 75px; right: 16px; left: auto; width: min(230px, calc(100vw - 32px)); margin: 0; padding: 8px 16px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); box-shadow: 0 16px 32px rgba(17, 23, 31, 0.14); opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(-8px); transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease; }
   .mobile-menu.open { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0); }
 }
+
+/* Sign-in and welcome popups */
+.auth-modal { position: fixed; z-index: 200; inset: 0; display: grid; place-items: center; padding: 20px; background: rgba(20, 35, 30, 0.45); backdrop-filter: blur(8px); animation: auth-fade 0.2s ease-out; }
+.auth-modal-card { position: relative; width: min(100%, 400px); padding: 38px 30px 30px; border: 1px solid var(--line); border-radius: 20px; background: #fffdf9; box-shadow: 0 28px 80px rgba(17, 23, 31, 0.28); text-align: center; animation: auth-pop 0.28s cubic-bezier(0.22, 1, 0.36, 1); }
+.auth-modal-logo { width: 76px; height: 76px; margin: 0 auto 18px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 4px var(--accent-soft), 0 10px 24px rgba(11, 79, 68, 0.18); }
+.auth-modal-card h2 { margin: 0 0 10px; font-size: 1.6rem; letter-spacing: -0.02em; }
+.auth-modal-card p { margin: 0 0 22px; color: var(--muted); font-size: 0.95rem; }
+.auth-modal-card p.auth-modal-status { min-height: 1.2em; margin: 12px 0 0; font-size: 0.85rem; }
+.auth-modal-close { position: absolute; top: 12px; right: 14px; width: 34px; height: 34px; border: 1px solid var(--line); border-radius: 50%; background: transparent; color: var(--ink); font-size: 1.3rem; cursor: pointer; }
+.auth-modal-actions { display: grid; gap: 10px; }
+@keyframes auth-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes auth-pop { from { opacity: 0; transform: translateY(14px) scale(0.96); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .auth-modal, .auth-modal-card { animation: none; } }

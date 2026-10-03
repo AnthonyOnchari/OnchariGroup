@@ -1,3 +1,8 @@
+import chatLogoUrl from "./assets/logo/logo-white-160.png";
+
+const assetUrls = import.meta.glob("./assets/*.{jpg,png,svg,webp}", { eager: true, query: "?url", import: "default" });
+const assetUrl = (name) => assetUrls[`./assets/${name}`] || `assets/${name}`;
+
 document.addEventListener('DOMContentLoaded', () => {
   const body = document.body;
   const page = body.dataset.page;
@@ -129,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
     closeShowcase();
     const showcase = document.createElement('div');
     showcase.className = 'service-showcase-modal';
-    showcase.innerHTML = `<button class="service-showcase-backdrop" type="button" aria-label="Close service showcase"></button><section class="service-showcase-dialog" role="dialog" aria-modal="true" aria-labelledby="service-showcase-title"><button class="service-showcase-close" type="button" aria-label="Close service showcase">&times;</button><span class="kicker">Explore service</span><h2 id="service-showcase-title">${service.title}</h2><div class="service-sample-grid">${service.samples.map(([image, title, copy]) => `<article><div class="service-sample-image"><img src="assets/${image}" alt="${title}" /></div><h3>${title}</h3><p>${copy}</p></article>`).join('')}</div><a class="button" href="contact.html">Start a conversation</a></section>`;
+    showcase.innerHTML = `<button class="service-showcase-backdrop" type="button" aria-label="Close service showcase"></button><section class="service-showcase-dialog" role="dialog" aria-modal="true" aria-labelledby="service-showcase-title"><button class="service-showcase-close" type="button" aria-label="Close service showcase">&times;</button><span class="kicker">Explore service</span><h2 id="service-showcase-title">${service.title}</h2><div class="service-sample-grid">${service.samples.map(([image, title, copy]) => `<article><div class="service-sample-image"><img src="${assetUrl(image)}" alt="${title}" /></div><h3>${title}</h3><p>${copy}</p></article>`).join('')}</div><a class="button" href="contact.html">Start a conversation</a></section>`;
     document.body.appendChild(showcase);
     document.body.classList.add('showcase-open');
     showcase.querySelectorAll('.service-showcase-close, .service-showcase-backdrop').forEach((button) => button.addEventListener('click', closeShowcase));
@@ -228,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
   chatWidget.className = 'chat-widget';
   chatWidget.innerHTML = `
     <button class="chat-launcher" type="button" aria-label="Open Onchari Group Assistant" aria-expanded="false">
-      <img src="assets/logo/logo-white-160.png" alt="" width="48" height="48" />
+      <img src="${chatLogoUrl}" alt="" width="48" height="48" />
       <span class="chat-launcher-dot"></span>
     </button>
     <button class="chat-backdrop" type="button" aria-label="Close quote chat"></button>
@@ -546,3 +551,67 @@ if (photoSlides.length === 2 && photoUrls.length > 1) {
   };
   window.setInterval(showNext, 4500);
 }
+
+const SIGNIN_FLAG = 'og-signin-pending';
+const hasStoredSession = () => Object.keys(localStorage).some((key) => key.startsWith('sb-') && key.endsWith('-auth-token'));
+
+const openAuthModal = (bodyHtml) => {
+  document.querySelector('.auth-modal')?.remove();
+  const modal = document.createElement('div');
+  modal.className = 'auth-modal';
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
+  modal.innerHTML = `<div class="auth-modal-card"><button class="auth-modal-close" type="button" aria-label="Close">&times;</button><img class="auth-modal-logo" src="${chatLogoUrl}" alt="Onchari Group" width="76" height="76" />${bodyHtml}</div>`;
+  const close = () => { modal.remove(); document.removeEventListener('keydown', onKey); };
+  const onKey = (event) => { if (event.key === 'Escape') close(); };
+  modal.addEventListener('click', (event) => { if (event.target === modal || event.target.closest('.auth-modal-close')) close(); });
+  document.addEventListener('keydown', onKey);
+  document.body.appendChild(modal);
+  return { modal, close };
+};
+
+const showSignInModal = () => {
+  const { modal } = openAuthModal(`<h2>Welcome to Onchari Group</h2><p>Sign in with Google to follow your bookings, messages and project files in one place.</p><button class="button-ghost google-sign-in" type="button"><span aria-hidden="true">G</span> Continue with Google</button><p class="auth-modal-status form-message" role="status" aria-live="polite"></p>`);
+  const status = modal.querySelector('.auth-modal-status');
+  modal.querySelector('.google-sign-in').addEventListener('click', async () => {
+    status.textContent = 'Opening Google…';
+    try {
+      const { supabase, supabaseConfigured } = await import('./supabase-client.js');
+      if (!supabaseConfigured) { status.textContent = 'Sign-in is not available right now.'; return; }
+      sessionStorage.setItem(SIGNIN_FLAG, '1');
+      const { error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: `${window.location.origin}${window.location.pathname}` } });
+      if (error) { sessionStorage.removeItem(SIGNIN_FLAG); status.textContent = error.message; }
+    } catch {
+      status.textContent = 'Something went wrong. Please try again.';
+    }
+  });
+};
+
+if (document.body.dataset.page !== 'account') {
+  document.addEventListener('click', (event) => {
+    const link = event.target.closest('a[href="account.html"]');
+    if (!link || hasStoredSession() || event.metaKey || event.ctrlKey || event.shiftKey) return;
+    event.preventDefault();
+    showSignInModal();
+  });
+}
+
+document.addEventListener('click', (event) => {
+  if (event.target.closest('#google-sign-in')) sessionStorage.setItem(SIGNIN_FLAG, '1');
+});
+
+const showWelcomeModal = async () => {
+  if (!sessionStorage.getItem(SIGNIN_FLAG)) return;
+  const { supabase, supabaseConfigured } = await import('./supabase-client.js');
+  if (!supabaseConfigured) return;
+  const { data } = await supabase.auth.getSession();
+  sessionStorage.removeItem(SIGNIN_FLAG);
+  const user = data.session?.user;
+  if (!user) return;
+  const fullName = user.user_metadata?.full_name || user.user_metadata?.name || '';
+  const { modal, close } = openAuthModal(`<h2 class="auth-welcome-title"></h2><p>You’re signed in. We’re glad to have you with us.</p><div class="auth-modal-actions"><a class="button" href="account.html">Go to my account</a><button class="button-ghost auth-continue" type="button">Continue browsing</button></div>`);
+  modal.querySelector('.auth-welcome-title').textContent = `Hello, ${fullName.split(' ')[0] || 'there'}!`;
+  modal.querySelector('.auth-continue').addEventListener('click', close);
+};
+
+showWelcomeModal();
