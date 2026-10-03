@@ -51,25 +51,10 @@
             <div class="account-auth-copy">
               <span class="booking-step-label">Secure customer account</span>
               <h2 id="account-auth-title">Sign in or create your account</h2>
-              <p>Use Google or a phone number. Phone sign-in creates your account when you verify the SMS code.</p>
+              <p>Use your Google account to sign in or create your account.</p>
             </div>
             <div class="account-auth-controls">
               <button id="google-sign-in" class="button-ghost google-sign-in" type="button"><span aria-hidden="true">G</span> Continue with Google</button>
-              <div class="account-divider"><span>or use your phone</span></div>
-              <form id="phone-sign-in-form" class="account-auth-form">
-                <div class="field">
-                  <label for="auth-phone">Phone number</label>
-                  <input id="auth-phone" type="tel" autocomplete="tel" placeholder="+254700000000" pattern="\+[1-9][0-9]{7,14}" required />
-                </div>
-                <button class="button" type="submit">Send verification code</button>
-              </form>
-              <form id="phone-verify-form" class="account-auth-form" hidden>
-                <div class="field">
-                  <label for="auth-code">SMS verification code</label>
-                  <input id="auth-code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{4,8}" required />
-                </div>
-                <button class="button" type="submit">Verify and sign in</button>
-              </form>
               <p id="account-auth-status" class="form-message" role="status" aria-live="polite"></p>
             </div>
           </section>

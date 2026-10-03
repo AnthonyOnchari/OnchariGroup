@@ -6,10 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const dashboard = document.getElementById('account-dashboard');
   const authStatus = document.getElementById('account-auth-status');
   const dashboardStatus = document.getElementById('account-dashboard-status');
-  const phoneInput = document.getElementById('auth-phone');
-  const codeInput = document.getElementById('auth-code');
-  const phoneForm = document.getElementById('phone-sign-in-form');
-  const verifyForm = document.getElementById('phone-verify-form');
   const bookingsContainer = document.getElementById('account-bookings');
   const conversation = document.getElementById('account-conversation');
   const conversationMessages = document.getElementById('conversation-messages');
@@ -218,29 +214,6 @@ document.addEventListener('DOMContentLoaded', () => {
       provider: 'google',
       options: { redirectTo: new URL('account.html', window.location.href).href }
     });
-    if (error) setStatus(authStatus, error.message, true);
-  });
-
-  phoneForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    if (!phoneForm.reportValidity()) return;
-    const phone = phoneInput.value.trim().replaceAll(' ', '');
-    setStatus(authStatus, 'Sending your verification code…');
-    const { error } = await supabase.auth.signInWithOtp({ phone, options: { shouldCreateUser: true } });
-    if (error) {
-      setStatus(authStatus, error.message, true);
-      return;
-    }
-    phoneInput.value = phone;
-    verifyForm.hidden = false;
-    setStatus(authStatus, 'Code sent. Check your phone and enter the verification code.');
-  });
-
-  verifyForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    if (!verifyForm.reportValidity()) return;
-    setStatus(authStatus, 'Verifying code…');
-    const { error } = await supabase.auth.verifyOtp({ phone: phoneInput.value, token: codeInput.value.trim(), type: 'sms' });
     if (error) setStatus(authStatus, error.message, true);
   });
 
