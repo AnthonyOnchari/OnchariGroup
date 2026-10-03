@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
   chatWidget.className = 'chat-widget';
   chatWidget.innerHTML = `
     <button class="chat-launcher" type="button" aria-label="Open Onchari Group Assistant" aria-expanded="false">
-      <img src="assets/logo/Onchari Group Logo white bg (1).png" alt="" />
+      <img src="assets/logo/logo-white-160.png" alt="" width="48" height="48" />
       <span class="chat-launcher-dot"></span>
     </button>
     <button class="chat-backdrop" type="button" aria-label="Close quote chat"></button>
