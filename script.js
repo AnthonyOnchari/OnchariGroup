@@ -2,6 +2,29 @@ import chatLogoUrl from "./assets/logo/logo-white-160.png";
 
 const assetUrls = import.meta.glob("./assets/*.{jpg,png,svg,webp}", { eager: true, query: "?url", import: "default" });
 const assetUrl = (name) => assetUrls[`./assets/${name}`] || `assets/${name}`;
+
+const loadGalleryPhotos = (gallery, scroller) => {
+  const images = [...gallery.querySelectorAll('img[data-src]')];
+  const load = (img) => {
+    if (img.src) return;
+    img.addEventListener('error', () => {
+      if (!img.dataset.retried) { img.dataset.retried = '1'; img.src = `${img.dataset.src}?r=${Date.now()}`; }
+    });
+    img.src = img.dataset.src;
+  };
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
+      if (entry.isIntersecting) { observer.unobserve(entry.target); load(entry.target); }
+    }), { root: scroller, rootMargin: '800px 0px' });
+    images.forEach((img) => observer.observe(img));
+  }
+  const timer = window.setInterval(() => {
+    if (!gallery.isConnected) { window.clearInterval(timer); return; }
+    const next = images.find((img) => !img.src);
+    if (!next) { window.clearInterval(timer); return; }
+    load(next);
+  }, 250);
+};
 const photoUrls = Object.values(import.meta.glob('./assets/photos-web/*.jpg', { eager: true, query: '?url', import: 'default' }));
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -136,11 +159,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const showcase = document.createElement('div');
     showcase.className = 'service-showcase-modal';
     const samplesHtml = serviceKey === 'photography'
-      ? `<div class="service-photo-gallery">${photoUrls.map((url, index) => `<img src="${url}" alt="Onchari Group photography ${index + 1}" loading="lazy" decoding="async" />`).join('')}</div>`
+      ? `<div class="service-photo-gallery">${photoUrls.map((url, index) => `<img data-src="${url}" alt="Onchari Group photography ${index + 1}" decoding="async" />`).join('')}</div>`
       : `<div class="service-sample-grid">${service.samples.map(([image, title, copy]) => `<article><div class="service-sample-image"><img src="${assetUrl(image)}" alt="${title}" /></div><h3>${title}</h3><p>${copy}</p></article>`).join('')}</div>`;
     showcase.innerHTML = `<button class="service-showcase-backdrop" type="button" aria-label="Close service showcase"></button><section class="service-showcase-dialog" role="dialog" aria-modal="true" aria-labelledby="service-showcase-title"><button class="service-showcase-close" type="button" aria-label="Close service showcase">&times;</button><span class="kicker">Explore service</span><h2 id="service-showcase-title">${service.title}</h2>${samplesHtml}<a class="button" href="contact.html">Start a conversation</a></section>`;
     document.body.appendChild(showcase);
     document.body.classList.add('showcase-open');
+    const gallery = showcase.querySelector('.service-photo-gallery');
+    if (gallery) loadGalleryPhotos(gallery, showcase.querySelector('.service-showcase-dialog'));
     showcase.querySelectorAll('.service-showcase-close, .service-showcase-backdrop').forEach((button) => button.addEventListener('click', closeShowcase));
   };
 
