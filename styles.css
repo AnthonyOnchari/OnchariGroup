@@ -2651,3 +2651,15 @@ body[data-page="about"] .about-terms-callout { text-align: left; }
 .service-photo-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 26px; }
 .service-photo-gallery img { width: 100%; aspect-ratio: 1; border-radius: 10px; background: var(--surface-soft); object-fit: cover; }
 @media (max-width: 700px) { .service-photo-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; } }
+
+.service-photo-gallery img { cursor: zoom-in; transition: transform 0.2s ease, filter 0.2s ease; }
+.service-photo-gallery img:hover { filter: brightness(1.06); transform: scale(1.02); }
+.photo-lightbox { position: fixed; z-index: 210; inset: 0; display: grid; place-items: center; background: rgba(10, 16, 14, 0.95); animation: auth-fade 0.2s ease-out; touch-action: pan-y; }
+.photo-lightbox-image { max-width: 100vw; max-height: 100vh; max-height: 100dvh; object-fit: contain; user-select: none; -webkit-user-drag: none; }
+.photo-lightbox-close, .photo-lightbox-nav { position: absolute; display: grid; place-items: center; border: 1px solid rgba(255, 255, 255, 0.28); border-radius: 50%; background: rgba(0, 0, 0, 0.45); color: #fff; line-height: 1; cursor: pointer; }
+.photo-lightbox-close { top: 14px; right: 14px; width: 42px; height: 42px; font-size: 1.6rem; }
+.photo-lightbox-nav { top: 50%; width: 46px; height: 46px; margin-top: -23px; font-size: 2rem; padding-bottom: 4px; }
+.photo-lightbox-prev { left: 12px; }
+.photo-lightbox-next { right: 12px; }
+.photo-lightbox-count { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); padding: 4px 12px; border-radius: 999px; background: rgba(0, 0, 0, 0.5); color: #fff; font-size: 0.8rem; }
+@media (max-width: 700px) { .photo-lightbox-nav { width: 38px; height: 38px; margin-top: -19px; font-size: 1.6rem; } .photo-lightbox-prev { left: 6px; } .photo-lightbox-next { right: 6px; } }

@@ -618,3 +618,50 @@ const showWelcomeModal = async () => {
 };
 
 showWelcomeModal();
+
+const openLightbox = (startIndex) => {
+  let index = startIndex;
+  const box = document.createElement('div');
+  box.className = 'photo-lightbox';
+  box.setAttribute('role', 'dialog');
+  box.setAttribute('aria-modal', 'true');
+  box.setAttribute('aria-label', 'Photo viewer');
+  box.innerHTML = '<button class="photo-lightbox-close" type="button" aria-label="Close photo">&times;</button><button class="photo-lightbox-nav photo-lightbox-prev" type="button" aria-label="Previous photo">&#8249;</button><img class="photo-lightbox-image" alt="" /><button class="photo-lightbox-nav photo-lightbox-next" type="button" aria-label="Next photo">&#8250;</button><span class="photo-lightbox-count"></span>';
+  const image = box.querySelector('.photo-lightbox-image');
+  const count = box.querySelector('.photo-lightbox-count');
+  const show = (next) => {
+    index = (next + photoUrls.length) % photoUrls.length;
+    image.src = photoUrls[index];
+    image.alt = `Onchari Group photography ${index + 1}`;
+    count.textContent = `${index + 1} / ${photoUrls.length}`;
+    new Image().src = photoUrls[(index + 1) % photoUrls.length];
+  };
+  const close = () => { box.remove(); window.removeEventListener('keydown', onKey, true); };
+  const onKey = (event) => {
+    if (!['Escape', 'ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+    event.stopPropagation();
+    if (event.key === 'Escape') close();
+    else show(index + (event.key === 'ArrowRight' ? 1 : -1));
+  };
+  let touchX = null;
+  box.addEventListener('touchstart', (event) => { touchX = event.touches[0].clientX; }, { passive: true });
+  box.addEventListener('touchend', (event) => {
+    if (touchX === null) return;
+    const delta = event.changedTouches[0].clientX - touchX;
+    touchX = null;
+    if (Math.abs(delta) > 50) show(index + (delta < 0 ? 1 : -1));
+  });
+  box.addEventListener('click', (event) => {
+    if (event.target === box || event.target.closest('.photo-lightbox-close')) close();
+    else if (event.target.closest('.photo-lightbox-prev')) show(index - 1);
+    else if (event.target.closest('.photo-lightbox-next')) show(index + 1);
+  });
+  window.addEventListener('keydown', onKey, true);
+  document.body.appendChild(box);
+  show(startIndex);
+};
+
+document.addEventListener('click', (event) => {
+  const photo = event.target.closest('.service-photo-gallery img');
+  if (photo) openLightbox([...photo.parentElement.children].indexOf(photo));
+});
