@@ -1,31 +1,25 @@
 import chatLogoUrl from "./assets/logo/logo-white-160.png";
 
-const assetUrls = import.meta.glob("./assets/*.{jpg,png,svg,webp}", { eager: true, query: "?url", import: "default" });
+const assetUrls = import.meta.glob("./assets/*.{jpg,svg,webp}", { eager: true, query: "?url", import: "default" });
 const assetUrl = (name) => assetUrls[`./assets/${name}`] || `assets/${name}`;
 
-const loadGalleryPhotos = (gallery, scroller) => {
-  const images = [...gallery.querySelectorAll('img[data-src]')];
-  const load = (img) => {
-    if (img.src) return;
+const webPhotos = import.meta.glob('./assets/photos-web/*.jpg', { eager: true, query: '?url', import: 'default' });
+const thumbPhotos = import.meta.glob('./assets/photos-thumb/*.jpg', { eager: true, query: '?url', import: 'default' });
+const photoKeys = Object.keys(webPhotos).sort();
+const photoUrls = photoKeys.map((key) => webPhotos[key]);
+const photoThumbUrls = photoKeys.map((key) => thumbPhotos[key.replace('photos-web', 'photos-thumb')] || webPhotos[key]);
+
+const loadGalleryPhotos = (gallery) => {
+  gallery.querySelectorAll('img[data-src]').forEach((img) => {
     img.addEventListener('error', () => {
-      if (!img.dataset.retried) { img.dataset.retried = '1'; img.src = `${img.dataset.src}?r=${Date.now()}`; }
+      const tries = Number(img.dataset.tries || 0);
+      if (tries >= 3) return;
+      img.dataset.tries = String(tries + 1);
+      window.setTimeout(() => { img.src = `${img.dataset.src}?r=${Date.now()}`; }, 400 * (tries + 1));
     });
     img.src = img.dataset.src;
-  };
-  if ('IntersectionObserver' in window) {
-    const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
-      if (entry.isIntersecting) { observer.unobserve(entry.target); load(entry.target); }
-    }), { root: scroller, rootMargin: '800px 0px' });
-    images.forEach((img) => observer.observe(img));
-  }
-  const timer = window.setInterval(() => {
-    if (!gallery.isConnected) { window.clearInterval(timer); return; }
-    const next = images.find((img) => !img.src);
-    if (!next) { window.clearInterval(timer); return; }
-    load(next);
-  }, 250);
+  });
 };
-const photoUrls = Object.values(import.meta.glob('./assets/photos-web/*.jpg', { eager: true, query: '?url', import: 'default' }));
 
 document.addEventListener('DOMContentLoaded', () => {
   const body = document.body;
@@ -81,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
         intro: 'Polished digital spaces that make your business easier to trust, understand and choose.',
         description: 'From a focused landing page to a complete business website, we build experiences with clear structure and a confident visual direction.',
         items: ['Landing pages and business websites', 'Portfolio and service pages', 'Responsive layouts for every screen'],
-        work: [['hero-cover.jpg', 'Brand website', 'A focused digital home for a growing brand.'], ['graphic-design-sample.png', 'Campaign landing page', 'Clear design that supports a strong message.'], ['app-development.svg', 'Digital product', 'A considered experience built around the user.']]
+        work: [['hero-cover.jpg', 'Brand website', 'A focused digital home for a growing brand.'], ['graphic-design-sample.jpg', 'Campaign landing page', 'Clear design that supports a strong message.'], ['app-development.svg', 'Digital product', 'A considered experience built around the user.']]
       },
       photography: {
         label: 'Photography',
@@ -113,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         intro: 'Mobile experiences that help people connect, return and get more from every interaction.',
         description: 'We turn a useful idea into a focused product experience, from the first screen through to a clear path for users.',
         items: ['Mobile product experiences', 'Simple, focused user flows', 'Launch-ready digital thinking'],
-        work: [['app-development.svg', 'Chichi app', 'A mobile experience that keeps people connected.'], ['graphic-design-sample.png', 'Product interface', 'A clear visual direction for a useful product.'], ['hero-cover.jpg', 'Digital experience', 'A simple path from interest to action.']]
+        work: [['app-development.svg', 'Chichi app', 'A mobile experience that keeps people connected.'], ['graphic-design-sample.jpg', 'Product interface', 'A clear visual direction for a useful product.'], ['hero-cover.jpg', 'Digital experience', 'A simple path from interest to action.']]
       },
       design: {
         label: 'Poster, logo & graphic design',
@@ -121,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
         intro: 'Distinctive graphics and brand assets that give your business a clear point of view.',
         description: 'We create practical visual systems that help your brand feel consistent across posters, logos, campaigns and everyday communication.',
         items: ['Logo and identity direction', 'Posters and campaign graphics', 'Social and marketing design assets'],
-        work: [['graphic-design-sample.png', 'Campaign graphic', 'A memorable visual made for attention.'], ['portrait-session.jpg', 'Brand imagery', 'Photography that gives the identity more life.'], ['app-development.svg', 'Visual system', 'A consistent look across every touchpoint.']]
+        work: [['graphic-design-sample.jpg', 'Campaign graphic', 'A memorable visual made for attention.'], ['portrait-session.jpg', 'Brand imagery', 'Photography that gives the identity more life.'], ['app-development.svg', 'Visual system', 'A consistent look across every touchpoint.']]
       }
     };
     const service = services[new URLSearchParams(window.location.search).get('service')] || services.website;
@@ -138,12 +132,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const serviceShowcases = {
-    website: { title: 'Website design', samples: [['hero-cover.jpg', 'Brand website', 'A focused digital home for a growing brand.'], ['graphic-design-sample.png', 'Campaign landing page', 'Clear design that supports a strong message.'], ['app-development.svg', 'Digital product', 'A considered experience built around the user.']] },
+    website: { title: 'Website design', samples: [['hero-cover.jpg', 'Brand website', 'A focused digital home for a growing brand.'], ['graphic-design-sample.jpg', 'Campaign landing page', 'Clear design that supports a strong message.'], ['app-development.svg', 'Digital product', 'A considered experience built around the user.']] },
     photography: { title: 'Photography', samples: [['portrait-session.jpg', 'Portrait session', 'Images with warmth, confidence and character.'], ['event-story.jpg', 'Event coverage', 'Visual moments that keep the story moving.'], ['hero-portrait.jpg', 'Production portraits', 'People and process captured with intention.']] },
     videography: { title: 'Videography', samples: [['hero-portrait.jpg', 'Production story', 'A visual look at the people behind the work.'], ['event-story.jpg', 'Event film', 'Energy and atmosphere shaped into a clear story.'], ['production-team.jpg', 'Brand content', 'Content made to build attention and trust.']] },
     property: { title: 'Property marketing', samples: [['production-team.jpg', 'Property campaign', 'A strong visual first impression for a listing.'], ['hero-cover.jpg', 'Property promotion', 'Digital presentation designed to attract attention.'], ['event-story.jpg', 'Location story', 'Details and atmosphere brought forward clearly.']] },
-    app: { title: 'App development', samples: [['app-development.svg', 'Chichi app', 'A mobile experience that keeps people connected.'], ['graphic-design-sample.png', 'Product interface', 'A clear visual direction for a useful product.'], ['hero-cover.jpg', 'Digital experience', 'A simple path from interest to action.']] },
-    design: { title: 'Poster, logo & graphic design', samples: [['graphic-design-sample.png', 'Campaign graphic', 'A memorable visual made for attention.'], ['portrait-session.jpg', 'Brand imagery', 'Photography that gives the identity more life.'], ['app-development.svg', 'Visual system', 'A consistent look across every touchpoint.']] }
+    app: { title: 'App development', samples: [['app-development.svg', 'Chichi app', 'A mobile experience that keeps people connected.'], ['graphic-design-sample.jpg', 'Product interface', 'A clear visual direction for a useful product.'], ['hero-cover.jpg', 'Digital experience', 'A simple path from interest to action.']] },
+    design: { title: 'Poster, logo & graphic design', samples: [['graphic-design-sample.jpg', 'Campaign graphic', 'A memorable visual made for attention.'], ['portrait-session.jpg', 'Brand imagery', 'Photography that gives the identity more life.'], ['app-development.svg', 'Visual system', 'A consistent look across every touchpoint.']] }
   };
 
   const closeShowcase = () => {
@@ -159,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const showcase = document.createElement('div');
     showcase.className = 'service-showcase-modal';
     const samplesHtml = serviceKey === 'photography'
-      ? `<div class="service-photo-gallery">${photoUrls.map((url, index) => `<img data-src="${url}" alt="Onchari Group photography ${index + 1}" decoding="async" />`).join('')}</div>`
+      ? `<div class="service-photo-gallery">${photoThumbUrls.map((url, index) => `<img data-src="${url}" alt="Onchari Group photography ${index + 1}" decoding="async" />`).join('')}</div>`
       : `<div class="service-sample-grid">${service.samples.map(([image, title, copy]) => `<article><div class="service-sample-image"><img src="${assetUrl(image)}" alt="${title}" /></div><h3>${title}</h3><p>${copy}</p></article>`).join('')}</div>`;
     showcase.innerHTML = `<button class="service-showcase-backdrop" type="button" aria-label="Close service showcase"></button><section class="service-showcase-dialog" role="dialog" aria-modal="true" aria-labelledby="service-showcase-title"><button class="service-showcase-close" type="button" aria-label="Close service showcase">&times;</button><span class="kicker">Explore service</span><h2 id="service-showcase-title">${service.title}</h2>${samplesHtml}<a class="button" href="contact.html">Start a conversation</a></section>`;
     document.body.appendChild(showcase);
