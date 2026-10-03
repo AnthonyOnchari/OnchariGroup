@@ -2647,3 +2647,7 @@ body[data-page="about"] .about-terms-callout { text-align: left; }
 @keyframes auth-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes auth-pop { from { opacity: 0; transform: translateY(14px) scale(0.96); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .auth-modal, .auth-modal-card { animation: none; } }
+
+.service-photo-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 26px; }
+.service-photo-gallery img { width: 100%; aspect-ratio: 1; border-radius: 10px; background: var(--surface-soft); object-fit: cover; }
+@media (max-width: 700px) { .service-photo-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; } }

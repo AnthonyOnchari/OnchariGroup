@@ -2,6 +2,7 @@ import chatLogoUrl from "./assets/logo/logo-white-160.png";
 
 const assetUrls = import.meta.glob("./assets/*.{jpg,png,svg,webp}", { eager: true, query: "?url", import: "default" });
 const assetUrl = (name) => assetUrls[`./assets/${name}`] || `assets/${name}`;
+const photoUrls = Object.values(import.meta.glob('./assets/photos-web/*.jpg', { eager: true, query: '?url', import: 'default' }));
 
 document.addEventListener('DOMContentLoaded', () => {
   const body = document.body;
@@ -134,7 +135,10 @@ document.addEventListener('DOMContentLoaded', () => {
     closeShowcase();
     const showcase = document.createElement('div');
     showcase.className = 'service-showcase-modal';
-    showcase.innerHTML = `<button class="service-showcase-backdrop" type="button" aria-label="Close service showcase"></button><section class="service-showcase-dialog" role="dialog" aria-modal="true" aria-labelledby="service-showcase-title"><button class="service-showcase-close" type="button" aria-label="Close service showcase">&times;</button><span class="kicker">Explore service</span><h2 id="service-showcase-title">${service.title}</h2><div class="service-sample-grid">${service.samples.map(([image, title, copy]) => `<article><div class="service-sample-image"><img src="${assetUrl(image)}" alt="${title}" /></div><h3>${title}</h3><p>${copy}</p></article>`).join('')}</div><a class="button" href="contact.html">Start a conversation</a></section>`;
+    const samplesHtml = serviceKey === 'photography'
+      ? `<div class="service-photo-gallery">${photoUrls.map((url, index) => `<img src="${url}" alt="Onchari Group photography ${index + 1}" loading="lazy" decoding="async" />`).join('')}</div>`
+      : `<div class="service-sample-grid">${service.samples.map(([image, title, copy]) => `<article><div class="service-sample-image"><img src="${assetUrl(image)}" alt="${title}" /></div><h3>${title}</h3><p>${copy}</p></article>`).join('')}</div>`;
+    showcase.innerHTML = `<button class="service-showcase-backdrop" type="button" aria-label="Close service showcase"></button><section class="service-showcase-dialog" role="dialog" aria-modal="true" aria-labelledby="service-showcase-title"><button class="service-showcase-close" type="button" aria-label="Close service showcase">&times;</button><span class="kicker">Explore service</span><h2 id="service-showcase-title">${service.title}</h2>${samplesHtml}<a class="button" href="contact.html">Start a conversation</a></section>`;
     document.body.appendChild(showcase);
     document.body.classList.add('showcase-open');
     showcase.querySelectorAll('.service-showcase-close, .service-showcase-backdrop').forEach((button) => button.addEventListener('click', closeShowcase));
@@ -530,7 +534,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-const photoUrls = Object.values(import.meta.glob('./assets/WorksPhotos/*.{jpg,jpeg,png,webp}', { eager: true, query: '?url', import: 'default' }));
 const photoSlides = document.querySelectorAll('.home-team-photo-slide');
 
 if (photoSlides.length === 2 && photoUrls.length > 1) {
