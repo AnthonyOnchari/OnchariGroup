@@ -144,13 +144,127 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
-  const renderBookingList = () => {
-    bookingList.replaceChildren();
-    if (!bookingRows.length) {
-      appendText(bookingList, 'p', 'account-empty-note', 'No booking requests yet.');
+  let activeFilter = 'all';
+  const filterStatuses = ['all', 'requested', 'approved', 'quoted', 'quote_accepted', 'invoiced', 'paid', 'in_progress', 'completed', 'declined', 'cancelled'];
+
+  const showPanel = (name) => {
+    document.querySelectorAll('.console-panel').forEach((panel) => { panel.hidden = panel.id !== `panel-${name}`; });
+    document.querySelectorAll('.console-tab').forEach((tab) => tab.classList.toggle('is-active', tab.dataset.panel === name));
+  };
+  document.querySelectorAll('.console-tab').forEach((tab) => tab.addEventListener('click', () => showPanel(tab.dataset.panel)));
+
+  const setCount = (id, value) => {
+    const badge = document.getElementById(id);
+    badge.textContent = String(value);
+    badge.hidden = !value;
+  };
+
+  const renderOverview = () => {
+    const pending = bookingRows.filter((b) => b.status === 'requested');
+    setCount('tab-bookings-count', pending.length);
+    const pendingBox = document.getElementById('overview-pending');
+    pendingBox.replaceChildren();
+    if (!pending.length) appendText(pendingBox, 'p', 'account-empty-note', 'Nothing waiting. You are all caught up.');
+    pending.slice(0, 5).forEach((booking) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'admin-booking-button';
+      appendText(button, 'strong', '', booking.project_title || booking.service);
+      appendText(button, 'span', '', `${booking.contact_name} \u00b7 ${formatDate(booking.preferred_date)}`);
+      button.addEventListener('click', () => { showPanel('bookings'); selectBooking(booking); });
+      pendingBox.appendChild(button);
+    });
+    const openChats = chatSessions.filter((chat) => chat.followup?.status !== 'followed_up');
+    setCount('tab-chats-count', openChats.length);
+    const chatBox = document.getElementById('overview-chats');
+    chatBox.replaceChildren();
+    if (!openChats.length) appendText(chatBox, 'p', 'account-empty-note', 'No chats waiting for follow-up.');
+    openChats.slice(0, 5).forEach((chat) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'admin-booking-button';
+      appendText(button, 'strong', '', chat.name || chat.contact || chat.title);
+      appendText(button, 'span', '', chat.contact || chat.title);
+      button.addEventListener('click', () => { showPanel('chats'); activeChat = chat; renderChatList(); renderChatDetail(); });
+      chatBox.appendChild(button);
+    });
+  };
+
+  const renderStats = () => {
+    renderOverview();
+    const stats = document.getElementById('admin-stats');
+    stats.replaceChildren();
+    const paidTotal = bookingRows.flatMap((b) => b.documents || [])
+      .filter((d) => d.doc_type === 'invoice' && d.status === 'paid')
+      .reduce((sum, d) => sum + Number(d.amount), 0);
+    [
+      ['Total bookings', bookingRows.length],
+      ['Awaiting approval', bookingRows.filter((b) => b.status === 'requested').length],
+      ['In progress', bookingRows.filter((b) => ['approved', 'quoted', 'quote_accepted', 'invoiced', 'paid', 'in_progress'].includes(b.status)).length],
+      ['Completed', bookingRows.filter((b) => b.status === 'completed').length],
+      ['Revenue received', formatMoney(paidTotal)]
+    ].forEach(([label, value]) => {
+      const box = document.createElement('div');
+      box.className = 'admin-stat';
+      appendText(box, 'strong', '', String(value));
+      appendText(box, 'span', '', label);
+      stats.appendChild(box);
+    });
+    const filters = document.getElementById('admin-filters');
+    filters.replaceChildren();
+    filterStatuses.forEach((value) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = value.replaceAll('_', ' ');
+      button.classList.toggle('is-active', value === activeFilter);
+      button.addEventListener('click', () => { activeFilter = value; renderBookingList(); });
+      filters.appendChild(button);
+    });
+  };
+
+  const setBookingStatus = async (status) => {
+    const { error } = await supabase.from('bookings').update({ status, updated_at: new Date().toISOString() }).eq('id', activeBooking.id);
+    if (error) {
+      setStatus(`Could not update booking: ${error.message}`, true);
       return;
     }
-    bookingRows.forEach((booking) => {
+    setStatus(`Booking marked ${status.replaceAll('_', ' ')}.`);
+    await loadBookings();
+  };
+
+  const renderApproval = () => {
+    const box = document.getElementById('admin-approval');
+    box.replaceChildren();
+    const actions = {
+      requested: [['Approve request', 'approved', 'button'], ['Decline', 'declined', 'button-ghost']],
+      approved: [['Mark in progress', 'in_progress', 'button-ghost'], ['Cancel', 'cancelled', 'button-ghost']],
+      paid: [['Mark in progress', 'in_progress', 'button-ghost']],
+      in_progress: [['Mark completed', 'completed', 'button']],
+      declined: [['Reopen', 'requested', 'button-ghost']],
+      cancelled: [['Reopen', 'requested', 'button-ghost']]
+    }[activeBooking.status] || [];
+    actions.forEach(([label, status, cls]) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = cls;
+      button.textContent = label;
+      button.addEventListener('click', async () => {
+        button.disabled = true;
+        await setBookingStatus(status);
+      });
+      box.appendChild(button);
+    });
+  };
+
+  const renderBookingList = () => {
+    renderStats();
+    bookingList.replaceChildren();
+    const visibleRows = activeFilter === 'all' ? bookingRows : bookingRows.filter((b) => b.status === activeFilter);
+    if (!visibleRows.length) {
+      appendText(bookingList, 'p', 'account-empty-note', 'No booking requests here.');
+      return;
+    }
+    visibleRows.forEach((booking) => {
       const button = document.createElement('button');
       button.type = 'button';
       button.className = `admin-booking-button${activeBooking?.id === booking.id ? ' is-active' : ''}`;
@@ -188,7 +302,24 @@ document.addEventListener('DOMContentLoaded', () => {
       ? String(booking.documents.find((item) => item.doc_type === 'estimate' && item.status === 'accepted').amount)
       : '';
     document.getElementById('invoice-due-date').value = invoice?.due_at || '';
-    const { data: profile } = await supabase.from('profiles').select('display_name').eq('id', booking.owner_id).maybeSingle();
+    renderApproval();
+    const { data: profile } = await supabase.from('profiles').select('display_name, username, phone, avatar_path').eq('id', booking.owner_id).maybeSingle();
+    const customer = document.getElementById('admin-customer');
+    customer.replaceChildren();
+    appendText(customer, 'span', 'booking-step-label', 'Customer account');
+    const line = document.createElement('div');
+    line.className = 'admin-customer-line';
+    if (profile?.avatar_path) {
+      const image = document.createElement('img');
+      image.alt = '';
+      image.src = supabase.storage.from('avatars').getPublicUrl(profile.avatar_path).data.publicUrl;
+      line.appendChild(image);
+    }
+    appendText(line, 'span', '', `${profile?.display_name || booking.contact_name}${profile?.username ? ` (@${profile.username})` : ''} · ${profile?.phone || booking.contact_phone}`);
+    if (profile?.phone) appendText(line, 'span', 'verified-tick', '✓').title = 'Phone number added';
+    customer.appendChild(line);
+    const orderCount = bookingRows.filter((b) => b.owner_id === booking.owner_id).length;
+    appendText(customer, 'p', '', `${orderCount} booking${orderCount === 1 ? '' : 's'} with Onchari Group`);
     document.getElementById('admin-conversation-title').textContent = profile?.display_name
       ? `Project conversation · ${profile.display_name}`
       : 'Project conversation';
@@ -309,6 +440,7 @@ document.addEventListener('DOMContentLoaded', () => {
     accessNotice.hidden = true;
     workspace.hidden = false;
     await loadBookings();
+    await loadChats(activeChat?.id);
   };
 
   const createDocument = (type, amount, dueDate, paymentReference, paymentDate) => insertDocument({ type, amount, dueDate, paymentReference, paymentDate });
@@ -416,6 +548,121 @@ document.addEventListener('DOMContentLoaded', () => {
       await renderMessages();
     }
   });
+
+  let chatSessions = [];
+  let activeChat = null;
+
+  const renderChatList = () => {
+    renderOverview();
+    const list = document.getElementById('admin-chat-list');
+    list.replaceChildren();
+    if (!chatSessions.length) {
+      appendText(list, 'p', 'account-empty-note', 'No assistant chats yet.');
+      return;
+    }
+    chatSessions.forEach((chat) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = `admin-booking-button${activeChat?.id === chat.id ? ' is-active' : ''}`;
+      appendText(button, 'strong', '', chat.name || chat.contact || chat.title);
+      appendText(button, 'span', '', `${chat.title} \u00b7 ${chat.messages.length} messages \u00b7 ${new Intl.DateTimeFormat('en-KE', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(chat.last))}`);
+      appendText(button, 'span', 'booking-status-pill', chat.followup?.status === 'followed_up' ? 'followed up' : 'open');
+      button.addEventListener('click', () => { activeChat = chat; renderChatList(); renderChatDetail(); });
+      list.appendChild(button);
+    });
+  };
+
+  const renderChatDetail = () => {
+    const transcript = document.getElementById('admin-chat-transcript');
+    const form = document.getElementById('admin-chat-followup');
+    transcript.replaceChildren();
+    document.getElementById('admin-chat-contact').replaceChildren();
+    form.hidden = !activeChat;
+    if (!activeChat) return;
+    const contactBox = document.getElementById('admin-chat-contact');
+    contactBox.replaceChildren();
+    appendText(contactBox, 'span', 'booking-step-label', 'Visitor contact');
+    appendText(contactBox, 'h3', '', activeChat.name || 'Name not given');
+    if (activeChat.contact) {
+      const link = document.createElement('a');
+      link.textContent = activeChat.contact;
+      link.href = activeChat.contact.includes('@') ? `mailto:${encodeURIComponent(activeChat.contact)}` : `tel:${activeChat.contact.replace(/[^\d+]/g, '')}`;
+      const p = document.createElement('p');
+      p.appendChild(link);
+      contactBox.appendChild(p);
+    } else {
+      appendText(contactBox, 'p', '', 'No contact left.');
+    }
+    activeChat.messages.forEach((message) => {
+      const item = document.createElement('article');
+      item.className = `conversation-message ${message.sender === 'assistant' ? 'from-staff' : 'from-customer'}`;
+      appendText(item, 'span', 'conversation-sender', message.sender === 'assistant' ? 'Assistant' : (activeChat.name || 'Visitor'));
+      appendText(item, 'p', '', message.body);
+      appendText(item, 'time', '', new Intl.DateTimeFormat('en-KE', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(message.created_at)));
+      transcript.appendChild(item);
+    });
+    document.getElementById('chat-note').value = activeChat.followup?.note || '';
+    document.getElementById('chat-toggle-followed').textContent = activeChat.followup?.status === 'followed_up' ? 'Reopen' : 'Mark followed up';
+  };
+
+  const saveFollowup = async (status) => {
+    const note = document.getElementById('chat-note').value.trim() || null;
+    const { error } = await supabase.from('chat_followups').upsert({
+      session_id: activeChat.id,
+      status: status || activeChat.followup?.status || 'open',
+      note,
+      updated_at: new Date().toISOString()
+    });
+    if (error) {
+      setStatus(`Could not save follow-up: ${error.message}`, true);
+      return;
+    }
+    setStatus('Chat follow-up saved.');
+    await loadChats(activeChat.id);
+  };
+
+  const loadChats = async (keepId) => {
+    const { data, error } = await supabase.from('chat_logs')
+      .select('id, session_id, user_id, sender, body, page, created_at, visitor_name, visitor_contact')
+      .order('created_at', { ascending: false })
+      .limit(2000);
+    if (error) {
+      document.getElementById('admin-chat-list').replaceChildren();
+      appendText(document.getElementById('admin-chat-list'), 'p', 'account-empty-note', `Could not load chats: ${error.message}`);
+      return;
+    }
+    const { data: followups } = await supabase.from('chat_followups').select('session_id, status, note');
+    const userIds = [...new Set(data.map((row) => row.user_id).filter(Boolean))];
+    const { data: profiles } = userIds.length
+      ? await supabase.from('profiles').select('id, display_name').in('id', userIds)
+      : { data: [] };
+    const groups = new Map();
+    [...data].reverse().forEach((row) => {
+      if (!groups.has(row.session_id)) groups.set(row.session_id, { id: row.session_id, messages: [], user_id: row.user_id });
+      const group = groups.get(row.session_id);
+      group.messages.push(row);
+      group.last = row.created_at;
+      if (row.user_id) group.user_id = row.user_id;
+      if (row.visitor_name) group.visitorName = row.visitor_name;
+      if (row.visitor_contact) group.contact = row.visitor_contact;
+    });
+    chatSessions = [...groups.values()].map((group) => {
+      const first = group.messages.find((m) => m.sender === 'visitor');
+      return {
+        ...group,
+        title: (first?.body || group.messages[0].body).slice(0, 60),
+        name: group.visitorName || profiles?.find((p) => p.id === group.user_id)?.display_name || '',
+        followup: followups?.find((f) => f.session_id === group.id)
+      };
+    }).sort((a, b) => new Date(b.last) - new Date(a.last));
+    activeChat = chatSessions.find((chat) => chat.id === keepId) || null;
+    renderChatList();
+    renderChatDetail();
+  };
+
+  document.getElementById('admin-chat-followup').addEventListener('submit', (event) => { event.preventDefault(); saveFollowup(); });
+  document.getElementById('chat-toggle-followed').addEventListener('click', () => saveFollowup(activeChat.followup?.status === 'followed_up' ? 'open' : 'followed_up'));
+  document.getElementById('refresh-chats').addEventListener('click', () => loadChats(activeChat?.id));
 
   document.getElementById('refresh-bookings').addEventListener('click', loadBookings);
   document.getElementById('estimate-valid').min = new Date().toISOString().slice(0, 10);

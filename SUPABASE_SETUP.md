@@ -4,7 +4,7 @@
 
 1. Create a Supabase project.
 2. Copy `.env.example` to `.env.local` and set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` from the project's API settings. The anon/publishable key is intended for browser use with row-level security; never put a service-role key in this site.
-3. Run `supabase/migrations/20261002000000_customer_workspace.sql` once in the Supabase SQL editor.
+3. Run `supabase/migrations/20261002000000_customer_workspace.sql`, then `supabase/migrations/20261005000000_profiles_cart_admin.sql` (username, avatar, saved cart, approval statuses), once each in the Supabase SQL editor.
 4. In Authentication settings, enable Google OAuth and Phone/SMS, configure the Google OAuth client and an SMS provider, then add `http://localhost:5173/account.html`, `http://127.0.0.1:5173/account.html` and the production account URL to the allowed redirect URLs.
 5. Run `npm run dev` for local testing and `npm run build` for production output.
 

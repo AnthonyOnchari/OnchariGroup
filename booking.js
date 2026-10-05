@@ -34,6 +34,42 @@ document.addEventListener('DOMContentLoaded', () => {
     .find((option) => option.textContent === serviceNames[requestedService]);
   if (serviceOption) serviceOption.selected = true;
 
+  const draftId = new URLSearchParams(window.location.search).get('draft');
+  if (draftId && supabaseConfigured) {
+    supabase.from('saved_items').select('details').eq('id', draftId).maybeSingle().then(({ data }) => {
+      Object.entries(data?.details || {}).forEach(([name, value]) => {
+        const field = form.elements[name];
+        if (field && typeof value === 'string' && name !== 'date') field.value = value;
+      });
+    });
+  }
+
+  document.getElementById('save-to-cart').addEventListener('click', async () => {
+    if (!supabaseConfigured) {
+      setStatus('Saving is not available right now.', true);
+      return;
+    }
+    const values = Object.fromEntries(new FormData(form).entries());
+    if (!values.service) {
+      setStatus('Choose a service before saving.', true);
+      return;
+    }
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      setStatus('Sign in to save this to your cart.', true);
+      accountLink.classList.add('booking-account-required');
+      return;
+    }
+    const { error } = await supabase.from('saved_items').insert({
+      owner_id: session.user.id,
+      service: values.service,
+      project_title: values.title || null,
+      details: values
+    });
+    if (error) setStatus(`Could not save: ${error.message}`, true);
+    else setStatus('Saved to your cart. Find it in your account.');
+  });
+
   const formatDate = (value) => new Intl.DateTimeFormat('en-KE', { dateStyle: 'medium' })
     .format(new Date(`${value}T12:00:00`));
 

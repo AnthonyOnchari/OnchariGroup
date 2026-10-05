@@ -32,14 +32,6 @@
     </header>
 
     <main class="account-page">
-      <section class="account-intro">
-        <div class="container">
-          <span class="kicker">Your project space</span>
-          <h1>One place for the whole project.</h1>
-          <p>Keep up with booking requests, messages, approved estimates, invoices, receipts and shared files.</p>
-        </div>
-      </section>
-
       <section class="section account-content">
         <div class="container account-container">
           <div id="account-setup-notice" class="account-notice" hidden>
@@ -71,6 +63,56 @@
               </div>
             </div>
             <p id="account-dashboard-status" class="form-message" role="status" aria-live="polite"></p>
+            <div class="profile-signed-in"><span class="profile-dot" aria-hidden="true"></span><span id="profile-signed-in-text">Signed in</span></div>
+            <section id="profile-summary" class="profile-summary" aria-label="Your dashboard" hidden>
+              <div class="profile-summary-head">
+                <div class="profile-avatar-wrap"><img id="summary-avatar" class="profile-avatar" alt="" /><span id="summary-flag" class="profile-flag" hidden></span></div>
+                <div class="profile-summary-info">
+                  <h3 id="summary-name"></h3>
+                  <p id="summary-meta"></p>
+                  <span id="summary-role" class="booking-status-pill" hidden>Admin</span>
+                </div>
+                <div class="profile-summary-actions">
+                  <button id="edit-profile" class="button-ghost" type="button">Edit profile</button>
+                  <a class="button" href="booking.html">New booking</a>
+                </div>
+              </div>
+              <div class="admin-stats">
+                <div class="admin-stat"><strong id="stat-bookings">0</strong><span>Bookings</span></div>
+                <div class="admin-stat"><strong id="stat-purchases">0</strong><span>Purchases</span></div>
+                <div class="admin-stat"><strong id="stat-saved">0</strong><span>Saved in cart</span></div>
+                <div class="admin-stat"><strong id="stat-spent">KES 0</strong><span>Total paid</span></div>
+              </div>
+            </section>
+            <section class="profile-card" id="profile-card" aria-labelledby="profile-title">
+              <div class="profile-avatar-block">
+                <div class="profile-avatar-wrap"><img id="profile-avatar" class="profile-avatar" alt="Your profile picture" /><span id="profile-flag" class="profile-flag" hidden></span></div>
+                <label class="button-ghost profile-avatar-button" for="profile-avatar-input">Change photo</label>
+                <input id="profile-avatar-input" type="file" accept="image/jpeg,image/png,image/webp" hidden />
+              </div>
+              <form id="profile-form" class="profile-form">
+                <h3 id="profile-title">Your profile</h3>
+                <div class="admin-action-fields">
+                  <div class="field"><label for="profile-name">Full name</label><input id="profile-name" type="text" maxlength="80" autocomplete="name" /></div>
+                  <div class="field"><label for="profile-username">Username</label><input id="profile-username" type="text" maxlength="30" pattern="[A-Za-z0-9_.]{3,30}" title="3-30 letters, numbers, dots or underscores" autocomplete="username" /></div>
+                  <div class="field"><label for="profile-phone">Phone number</label><input id="profile-phone" type="tel" maxlength="20" autocomplete="tel" /></div>
+                  <div class="field"><label for="profile-country">Country</label><select id="profile-country" required><option value="">Select your country</option></select></div>
+                  <div class="field"><label for="profile-email">Email</label><input id="profile-email" type="email" disabled /></div>
+                </div>
+                <button class="button" type="submit">Save profile</button>
+                <p id="profile-status" class="form-message" role="status" aria-live="polite"></p>
+              </form>
+            </section>
+            <div class="account-workspace-grid">
+              <section class="account-history" aria-labelledby="account-saved-title">
+                <h3 id="account-saved-title">Saved cart</h3>
+                <div id="account-saved" class="account-bookings"></div>
+              </section>
+              <section class="account-history" aria-labelledby="account-purchases-title">
+                <h3 id="account-purchases-title">Purchase history</h3>
+                <div id="account-purchases" class="account-bookings"></div>
+              </section>
+            </div>
             <div class="account-workspace-grid">
               <section class="account-history" aria-labelledby="account-history-title">
                 <h3 id="account-history-title">Project history</h3>

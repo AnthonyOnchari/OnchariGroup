@@ -140,6 +140,12 @@ document.addEventListener('DOMContentLoaded', () => {
     design: { title: 'Poster, logo & graphic design', samples: [['graphic-design-sample.jpg', 'Campaign graphic', 'A memorable visual made for attention.'], ['portrait-session.jpg', 'Brand imagery', 'Photography that gives the identity more life.'], ['app-development.svg', 'Visual system', 'A consistent look across every touchpoint.']] }
   };
 
+  const websiteSites = [
+    ['Get Fans Kenya', 'getfanskenya.store', 'https://www.getfanskenya.store', 'https://www.getfanskenya.store'],
+    ['La Famille Jérant', 'lafamillejerant.store', 'https://lafamillejerant.store', 'https://lafamillejerant.store'],
+    ['Onchari Group', 'oncharigroup.com', 'https://oncharigroup.com', 'index.html?embed=1']
+  ];
+
   const closeShowcase = () => {
     const showcase = document.querySelector('.service-showcase-modal');
     if (showcase) showcase.remove();
@@ -152,18 +158,48 @@ document.addEventListener('DOMContentLoaded', () => {
     closeShowcase();
     const showcase = document.createElement('div');
     showcase.className = 'service-showcase-modal';
-    const samplesHtml = serviceKey === 'photography'
+    const samplesHtml = serviceKey === 'website'
+      ? `<div class="website-site-grid">${websiteSites.map(([name, domain, url, preview]) => `<div class="website-site-card" data-url="${url}" data-preview="${preview}" data-name="${name}"><span class="website-site-bar"><i></i><i></i><i></i><span>${domain}</span></span><span class="website-site-preview"><iframe src="${preview}" title="${name} live preview" loading="lazy" tabindex="-1" sandbox="allow-scripts allow-same-origin" referrerpolicy="no-referrer"></iframe></span><span class="website-site-body"><strong>${name}</strong><span class="website-site-actions"><button class="website-site-visit" type="button">Visit site</button><a class="website-site-contact" href="contact.html">Start a conversation</a></span></span></div>`).join('')}</div>`
+      : serviceKey === 'photography'
       ? `<div class="service-photo-gallery">${photoThumbUrls.map((url, index) => `<img data-src="${url}" alt="Onchari Group photography ${index + 1}" decoding="async" />`).join('')}</div>`
       : `<div class="service-sample-grid">${service.samples.map(([image, title, copy]) => `<article><div class="service-sample-image"><img src="${assetUrl(image)}" alt="${title}" /></div><h3>${title}</h3><p>${copy}</p></article>`).join('')}</div>`;
-    showcase.innerHTML = `<button class="service-showcase-backdrop" type="button" aria-label="Close service showcase"></button><section class="service-showcase-dialog" role="dialog" aria-modal="true" aria-labelledby="service-showcase-title"><button class="service-showcase-close" type="button" aria-label="Close service showcase">&times;</button><span class="kicker">Explore service</span><h2 id="service-showcase-title">${service.title}</h2>${samplesHtml}<a class="button" href="contact.html">Start a conversation</a></section>`;
+    showcase.innerHTML = `<button class="service-showcase-backdrop" type="button" aria-label="Close service showcase"></button><section class="service-showcase-dialog" role="dialog" aria-modal="true" aria-labelledby="service-showcase-title"><button class="service-showcase-close" type="button" aria-label="Close service showcase">&times;</button><span class="kicker">Explore service</span><h2 id="service-showcase-title">${service.title}</h2>${samplesHtml}${serviceKey === 'website' ? '' : '<a class="button" href="contact.html">Start a conversation</a>'}</section>`;
     document.body.appendChild(showcase);
     document.body.classList.add('showcase-open');
     const gallery = showcase.querySelector('.service-photo-gallery');
+    const fitPreviews = () => showcase.querySelectorAll('.website-site-preview').forEach((box) => {
+      box.style.setProperty('--preview-scale', String(box.clientWidth / 1280));
+    });
+    if (showcase.querySelector('.website-site-preview')) {
+      fitPreviews();
+      new ResizeObserver(fitPreviews).observe(showcase.querySelector('.website-site-grid'));
+    }
     if (gallery) loadGalleryPhotos(gallery, showcase.querySelector('.service-showcase-dialog'));
     showcase.querySelectorAll('.service-showcase-close, .service-showcase-backdrop').forEach((button) => button.addEventListener('click', closeShowcase));
   };
 
   document.addEventListener('click', (event) => {
+    const siteCard = event.target.closest('.website-site-card');
+    if (siteCard && !event.target.closest('.website-site-contact')) {
+      event.preventDefault();
+      const url = siteCard.dataset.url;
+      document.querySelector('.site-popup')?.remove();
+      const popup = document.createElement('div');
+      popup.className = 'site-popup';
+      popup.setAttribute('role', 'dialog');
+      popup.setAttribute('aria-modal', 'true');
+      popup.innerHTML = '<div class="site-popup-card"><div class="site-popup-bar"><strong></strong><span class="site-popup-actions"><a class="site-popup-external" target="_blank" rel="noopener noreferrer">Open in new tab</a><button class="site-popup-close" type="button" aria-label="Close">&times;</button></span></div><iframe sandbox="allow-scripts allow-same-origin allow-forms allow-popups" referrerpolicy="no-referrer"></iframe></div>';
+      popup.querySelector('strong').textContent = siteCard.dataset.name;
+      popup.querySelector('.site-popup-external').href = url;
+      popup.querySelector('iframe').src = siteCard.dataset.preview || url;
+      popup.querySelector('iframe').title = siteCard.dataset.name;
+      const close = () => { popup.remove(); document.removeEventListener('keydown', onKey, true); };
+      const onKey = (e) => { if (e.key === 'Escape') { e.stopPropagation(); close(); } };
+      popup.addEventListener('click', (e) => { if (e.target === popup || e.target.closest('.site-popup-close')) close(); });
+      document.addEventListener('keydown', onKey, true);
+      document.body.appendChild(popup);
+      return;
+    }
     const card = event.target.closest('.service-feature');
     const trigger = event.target.closest('[data-service-showcase]') || card?.querySelector('[data-service-showcase]');
     if (!trigger) return;
@@ -225,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
     modalTitle.textContent = content.title;
     modalCopy.textContent = content.copy;
     modalLink.href = content.link;
-    modalLink.innerHTML = `${content.label} <span aria-hidden="true">↗</span>`;
+    modalLink.textContent = content.label;
     modal.classList.add('is-open');
     modal.setAttribute('aria-hidden', 'false');
     document.body.classList.add('modal-open');
@@ -238,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
     modalTitle.textContent = trigger.dataset.serviceTitle;
     modalCopy.textContent = trigger.dataset.serviceCopy;
     modalLink.href = 'contact.html';
-    modalLink.innerHTML = 'Start a conversation <span aria-hidden="true">↗</span>';
+    modalLink.textContent = 'Start a conversation';
     modal.classList.add('is-open');
     modal.setAttribute('aria-hidden', 'false');
     document.body.classList.add('modal-open');
@@ -301,16 +337,112 @@ document.addEventListener('DOMContentLoaded', () => {
     return value.length > 1 && !requestWords.some((word) => value.includes(word)) && cleanLeadName(text).split(/\s+/).length <= 4;
   };
 
-  const addChatMessage = (text, sender = 'assistant') => {
+  let visitor = JSON.parse(sessionStorage.getItem('og-chat-visitor') || 'null');
+  if (visitor && !visitor.typed) {
+    visitor = null;
+    sessionStorage.removeItem('og-chat-visitor');
+  }
+  let intakeStep = 0;
+  let intakeName = '';
+  let quoteIntake = false;
+  const chatPromptBar = chatWidget.querySelector('.chat-prompts');
+  const validContact = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value) || value.replace(/\D/g, '').length >= 9;
+
+  const visitorReady = (async () => {
+    if (visitor || !hasStoredSession()) return;
+    try {
+      const { supabase, supabaseConfigured } = await import('./supabase-client.js');
+      if (!supabaseConfigured) return;
+      const { data } = await supabase.auth.getSession();
+      const user = data.session?.user;
+      if (!user) return;
+      const { data: profile } = await supabase.from('profiles').select('display_name, phone').eq('id', user.id).maybeSingle();
+      const contact = user.email || profile?.phone;
+      if (!contact) return;
+      visitor = { name: profile?.display_name || user.user_metadata?.full_name || contact, contact };
+    } catch {
+      // Fall back to asking the visitor.
+    }
+  })();
+
+  const chatSessionId = sessionStorage.getItem('og-chat-session') || (() => {
+    const id = crypto.randomUUID();
+    sessionStorage.setItem('og-chat-session', id);
+    return id;
+  })();
+
+  const logChat = async (body, sender) => {
+    try {
+      const { supabase, supabaseConfigured } = await import('./supabase-client.js');
+      if (!supabaseConfigured) return;
+      const { data } = await supabase.auth.getSession();
+      await supabase.from('chat_logs').insert({
+        session_id: chatSessionId,
+        user_id: data.session?.user?.id ?? null,
+        sender,
+        body: body.slice(0, 2000),
+        page: window.location.pathname.slice(0, 200),
+        visitor_name: visitor?.name?.slice(0, 120) ?? null,
+        visitor_contact: visitor?.contact?.slice(0, 160) ?? null
+      });
+    } catch {
+      // Logging must never break the chat.
+    }
+  };
+
+  let nameNext = false;
+  let replyCount = 0;
+  let aiDisabled = false;
+  const chatHistory = [];
+  const visitorFirstName = () => (visitor?.name && !visitor.name.includes('@') ? visitor.name.split(' ')[0] : '');
+
+  const addChatMessage = (text, sender = 'assistant', log = true) => {
+    if (sender === 'assistant' && nameNext && visitorFirstName()) {
+      text = `${visitorFirstName()}, ${text.charAt(0).toLowerCase()}${text.slice(1)}`;
+    }
+    if (sender === 'assistant') nameNext = false;
     const message = document.createElement('p');
     message.className = `chat-message ${sender}`;
     message.textContent = text;
     chatMessages.appendChild(message);
     chatMessages.scrollTop = chatMessages.scrollHeight;
+    if (log) {
+      chatHistory.push({ role: sender === 'visitor' ? 'user' : 'assistant', content: text });
+      logChat(text, sender === 'visitor' ? 'visitor' : 'assistant');
+    }
   };
 
   const respondTo = (text) => {
     const lower = text.toLowerCase();
+    if (intakeStep === 1) {
+      if (!looksLikeName(text) || /^(hi|hello|hey|yo|sup|hola)\b/.test(lower)) {
+        addChatMessage('Before we start, please tell me your name so the team knows who they are talking to.');
+        return;
+      }
+      intakeName = cleanLeadName(text);
+      intakeStep = 2;
+      addChatMessage(`Nice to meet you, ${intakeName}. What is the best email or phone number to reach you on?`);
+      return;
+    }
+    if (intakeStep === 2) {
+      const contact = text.trim();
+      if (!validContact(contact)) {
+        addChatMessage('That does not look like an email or phone number. Please share a valid email or phone number so the team can reach you.');
+        return;
+      }
+      visitor = { name: intakeName, contact, typed: true };
+      sessionStorage.setItem('og-chat-visitor', JSON.stringify(visitor));
+      intakeStep = 0;
+      chatPromptBar.hidden = false;
+      if (quoteIntake) {
+        quoteIntake = false;
+        leadStep = 2;
+        addChatMessage(`Thanks, ${intakeName}. What would you like help with? A website, photos, video, property marketing or something else?`);
+      } else {
+        addChatMessage(`Thanks, ${intakeName}. I have saved your contact so Anthony and the team can follow up. What can I help you bring to life?`);
+      }
+      return;
+    }
     if (leadStep === 1) {
       if (!looksLikeName(text)) {
         addChatMessage('No problem. I still need your name first, then I will help you shape the quote. What should I call you?');
@@ -489,10 +621,33 @@ document.addEventListener('DOMContentLoaded', () => {
     typing.innerHTML = '<span></span><span></span><span></span>';
     chatMessages.appendChild(typing);
     chatMessages.scrollTop = chatMessages.scrollHeight;
-    window.setTimeout(() => {
-      typing.remove();
-      respondTo(text);
-    }, Math.min(1200, Math.max(500, text.length * 8)));
+    const fallback = () => {
+      window.setTimeout(() => {
+        typing.remove();
+        nameNext = replyCount++ % 3 === 0;
+        respondTo(text);
+      }, Math.min(1200, Math.max(500, text.length * 8)));
+    };
+    if (aiDisabled || intakeStep !== 0 || leadStep !== 0) {
+      fallback();
+      return;
+    }
+    fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: chatHistory.slice(-12), name: visitorFirstName() }),
+      signal: AbortSignal.timeout(20000)
+    })
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error(String(res.status)))))
+      .then(({ reply }) => {
+        if (!reply) throw new Error('empty');
+        typing.remove();
+        addChatMessage(reply);
+      })
+      .catch(() => {
+        aiDisabled = true;
+        fallback();
+      });
   };
 
   const queueStaticMessage = (text) => {
@@ -504,17 +659,26 @@ document.addEventListener('DOMContentLoaded', () => {
     chatMessages.scrollTop = chatMessages.scrollHeight;
     window.setTimeout(() => {
       typing.remove();
-      addChatMessage(text);
+      addChatMessage(text, 'assistant', false);
     }, Math.min(1200, Math.max(500, text.length * 8)));
   };
 
-  const openChat = (includeWelcome = true) => {
+  const openChat = async (includeWelcome = true) => {
     chatPanel.classList.add('is-open');
     chatPanel.setAttribute('aria-hidden', 'false');
     chatLauncher.setAttribute('aria-expanded', 'true');
     document.body.classList.add('chat-open');
-    if (includeWelcome && !chatMessages.children.length) queueStaticMessage('Hi, I am the Onchari Group Assistant. What can I help you bring to life?');
     chatInput.focus();
+    if (includeWelcome && !chatMessages.children.length) {
+      await visitorReady;
+      if (visitor) {
+        queueStaticMessage(`Hi${visitor.name && !visitor.name.includes('@') ? ` ${visitor.name.split(' ')[0]}` : ''}, I am the Onchari Group Assistant. What can I help you bring to life?`);
+      } else {
+        intakeStep = 1;
+        chatPromptBar.hidden = true;
+        queueStaticMessage('Hi, I am the Onchari Group Assistant. Before we start, what is your name?');
+      }
+    }
   };
   const closeChat = () => {
     chatPanel.classList.remove('is-open');
@@ -524,13 +688,22 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.remove('chat-open');
     document.body.classList.remove('quote-chat-open');
   };
-  window.openQuoteChat = () => {
-    leadStep = 1;
+  window.openQuoteChat = async () => {
+    await visitorReady;
     chatMessages.innerHTML = '';
     chatPanel.classList.add('quote-mode');
     document.body.classList.add('quote-chat-open');
     openChat(false);
-    addChatMessage('Absolutely, I can help you prepare a quote. What name should I use for you?');
+    if (visitor) {
+      leadStep = 1;
+      addChatMessage('Absolutely, I can help you prepare a quote. What name should I use for you?');
+    } else {
+      leadStep = 0;
+      quoteIntake = true;
+      intakeStep = 1;
+      chatPromptBar.hidden = true;
+      addChatMessage('Absolutely, I can help you prepare a quote. First, what is your name?');
+    }
   };
   chatLauncher.addEventListener('click', openChat);
   chatBackdrop.addEventListener('click', closeChat);
@@ -567,17 +740,27 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+if (new URLSearchParams(window.location.search).has('embed')) document.documentElement.classList.add('is-embed');
+
 const photoSlides = document.querySelectorAll('.home-team-photo-slide');
 
 if (photoSlides.length === 2 && photoUrls.length > 1) {
   let current = 0;
   let front = 0;
+  const showcase = photoSlides[0].parentElement;
+  const frame = (slide, image) => {
+    slide.classList.toggle('is-portrait', image.naturalHeight > image.naturalWidth);
+    showcase.style.setProperty('--slide-bg', `url("${image.src}")`);
+  };
+  if (photoSlides[0].complete && photoSlides[0].naturalWidth) frame(photoSlides[0], photoSlides[0]);
+  else photoSlides[0].addEventListener('load', () => frame(photoSlides[0], photoSlides[0]), { once: true });
   const showNext = () => {
     const next = (current + 1) % photoUrls.length;
     const incoming = photoSlides[1 - front];
     const loader = new Image();
     loader.onload = () => {
       incoming.src = photoUrls[next];
+      frame(incoming, loader);
       photoSlides[front].classList.remove('is-active');
       incoming.classList.add('is-active');
       front = 1 - front;
@@ -651,6 +834,59 @@ const showWelcomeModal = async () => {
 };
 
 showWelcomeModal();
+
+const showLoggedInChip = async () => {
+  if (!hasStoredSession()) return;
+  const actions = document.querySelector('.nav-actions');
+  if (!actions) return;
+  const { supabase, supabaseConfigured } = await import('./supabase-client.js');
+  if (!supabaseConfigured) return;
+  const { data } = await supabase.auth.getSession();
+  const user = data.session?.user;
+  if (!user) return;
+  const { data: profile } = await supabase.from('profiles').select('display_name, username, avatar_path, country, phone').eq('id', user.id).maybeSingle();
+  if (!profile?.country && document.body.dataset.page !== 'account' && !sessionStorage.getItem('og-country-prompted')) {
+    sessionStorage.setItem('og-country-prompted', '1');
+    window.location.href = 'account.html';
+    return;
+  }
+  const { countryFlag, countryName } = await import('./countries.js');
+  const name = profile?.display_name || user.user_metadata?.full_name || user.email || 'Account';
+  const avatar = profile?.avatar_path
+    ? supabase.storage.from('avatars').getPublicUrl(profile.avatar_path).data.publicUrl
+    : user.user_metadata?.avatar_url;
+  const chip = document.createElement('a');
+  chip.className = 'user-chip';
+  chip.href = 'account.html';
+  chip.title = `Logged in as ${profile?.username ? `@${profile.username}` : name}`;
+  const avatarWrap = document.createElement('span');
+  avatarWrap.className = 'user-chip-avatar-wrap';
+  const image = document.createElement(avatar ? 'img' : 'span');
+  image.className = 'user-chip-avatar';
+  if (avatar) { image.src = avatar; image.alt = ''; } else image.textContent = name.charAt(0).toUpperCase();
+  avatarWrap.appendChild(image);
+  if (profile?.country) {
+    const flag = document.createElement('span');
+    flag.className = 'user-chip-flag';
+    flag.textContent = countryFlag(profile.country);
+    flag.title = countryName(profile.country);
+    avatarWrap.appendChild(flag);
+  }
+  const label = document.createElement('span');
+  label.className = 'user-chip-label';
+  label.textContent = name.split(' ')[0];
+  chip.append(avatarWrap, label);
+  if (profile?.phone) {
+    const tick = document.createElement('span');
+    tick.className = 'verified-tick';
+    tick.textContent = '✓';
+    tick.title = 'Phone number added';
+    chip.append(tick);
+  }
+  actions.prepend(chip);
+};
+
+showLoggedInChip();
 
 const openLightbox = (startIndex) => {
   let index = startIndex;
