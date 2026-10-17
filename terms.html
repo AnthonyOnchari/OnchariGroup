@@ -32,17 +32,6 @@
     </header>
 
     <main class="terms-page">
-      <section class="terms-hero">
-        <div class="container terms-hero-inner">
-          <div>
-            <span class="kicker">Working with Onchari Group</span>
-            <h1>Clear terms for good work.</h1>
-            <p>Booking, payment, ownership and privacy terms for websites, media, design, marketing and digital projects.</p>
-          </div>
-          <div class="terms-hero-mark"><img src="assets/logo/Onchari Group Logo white bg (1).png" alt="Onchari Group logo" /><span>ONCHARI<br />GROUP</span></div>
-        </div>
-      </section>
-
       <section class="section terms-content">
         <div class="container terms-layout">
           <aside class="terms-summary">
@@ -50,10 +39,10 @@
             <strong>Onchari Group<br />General Terms</strong>
             <span>Version 1.0 · 2026</span>
             <button class="button terms-download" type="button">Download / Print PDF</button>
-            <small>Enter your name before downloading. Your browser will open a print-ready PDF view.</small>
+            <small>Enter your name to personalize your downloadable PDF.</small>
           </aside>
 
-          <article class="terms-document" id="terms-document">
+          <article class="terms-document" id="terms-document" aria-label="Preview of the general terms">
             <p class="terms-greeting">These terms help both sides know what to expect before work begins. A project quotation, invoice, written approval or payment confirms acceptance of the terms that apply to that project.</p>
 
             <section><h2>1. Booking and payment</h2><p>Booking payment of <strong>60% of the total quoted amount</strong> shall be made prior to the commencement of any work or service delivery.</p><p>The remaining balance is due upon completion, before final files, credentials, unwatermarked media or launch handover are released, unless the quotation states another schedule.</p></section>
@@ -70,6 +59,7 @@
             <section><h2>12. Acceptance</h2><p>By approving a quotation, paying a booking payment, instructing us to begin, or continuing with a project after receiving these terms, the client confirms that it has read and accepted the terms applicable to the work.</p></section>
 
             <div class="terms-contact"><strong>Questions before booking?</strong><span>oncharigroup@gmail.com</span><span>+254 750 600 715</span><span>Utawala, Nairobi, Kenya</span></div>
+            <div class="terms-preview-note">This is a short preview. Download the PDF to read the full terms.</div>
           </article>
         </div>
       </section>
@@ -81,7 +71,7 @@
         <button class="terms-name-close" type="button" aria-label="Close">&times;</button>
         <span class="kicker">Before you download</span>
         <h2>What is your name?</h2>
-        <p>We use it to keep a simple record of who requested this document.</p>
+        <p>Your name will appear on the downloaded document.</p>
         <label for="download-name">Your name</label>
         <input id="download-name" required autocomplete="name" placeholder="e.g. John Kamau" />
         <button class="button" type="submit">Continue to PDF</button>
@@ -92,16 +82,6 @@
       <div class="container"><div class="footer-main"><div class="footer-brand"><a class="brand" href="index.html" aria-label="Onchari Group home"><img class="brand-logo" src="assets/logo/logo-sil-160.png" alt="" /><span>ONCHARI GROUP</span></a><p>Digital experiences, media and design for businesses ready to grow.</p></div><div class="footer-column"><span class="footer-label">Explore</span><a href="about.html">About us</a><a href="work.html">Our work</a><a href="contact.html">Contact</a></div><div class="footer-column"><span class="footer-label">Start a conversation</span><a href="mailto:oncharigroup@gmail.com">oncharigroup@gmail.com</a><a href="tel:+254750600715">+254 750 600 715</a><span>Utawala, Nairobi, Kenya</span></div></div><div class="footer-row"><span>&copy; <span id="year"></span> Onchari Group. All rights reserved.</span></div></div>
     </footer>
     <script src="script.js" type="module"></script>
-    <script>
-      const termsModal = document.querySelector('.terms-name-modal');
-      const termsDownload = document.querySelector('.terms-download');
-      const termsForm = document.querySelector('.terms-name-card');
-      const termsClose = document.querySelector('.terms-name-close');
-      const closeTermsModal = () => { termsModal.classList.remove('is-open'); termsModal.setAttribute('aria-hidden', 'true'); };
-      termsDownload.addEventListener('click', () => { termsModal.classList.add('is-open'); termsModal.setAttribute('aria-hidden', 'false'); document.querySelector('#download-name').focus(); });
-      termsClose.addEventListener('click', closeTermsModal);
-      document.querySelector('.terms-name-backdrop').addEventListener('click', closeTermsModal);
-      termsForm.addEventListener('submit', (event) => { event.preventDefault(); const name = document.querySelector('#download-name').value.trim(); if (!name) return; document.title = `Onchari Group Terms - ${name}`; closeTermsModal(); window.print(); });
-    </script>
+    <script src="terms.js" type="module"></script>
   </body>
 </html>
