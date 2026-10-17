@@ -1,4 +1,5 @@
 import chatLogoUrl from "./assets/logo/logo-white-160.png";
+import { supabase, supabaseConfigured } from './supabase-client.js';
 
 const assetUrls = import.meta.glob("./assets/*.{jpg,svg,webp}", { eager: true, query: "?url", import: "default" });
 const assetUrl = (name) => assetUrls[`./assets/${name}`] || `assets/${name}`;
@@ -66,6 +67,15 @@ document.addEventListener('DOMContentLoaded', () => {
   if (year) {
     year.textContent = new Date().getFullYear();
   }
+
+  document.querySelectorAll('.faq-item').forEach((item) => {
+    item.addEventListener('toggle', () => {
+      if (!item.open) return;
+      document.querySelectorAll('.faq-item[open]').forEach((openItem) => {
+        if (openItem !== item) openItem.open = false;
+      });
+    });
+  });
 
   if (page === 'service') {
     const services = {
@@ -721,12 +731,397 @@ document.addEventListener('DOMContentLoaded', () => {
     if (event.key === 'Escape') closeChat();
   });
 
+  const openMailTo = (subject, body) => {
+    const mailToLink = `mailto:oncharigroup@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailToLink;
+  };
+
+  const quickEmailForm = document.getElementById('quick-email-form');
+  if (quickEmailForm) {
+    quickEmailForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const textarea = quickEmailForm.querySelector('#quick-email-message');
+      const message = textarea?.value.trim();
+      if (!message) return;
+
+      const submitButton = quickEmailForm.querySelector('button[type="submit"]');
+      const emailBody = `Quick message:\n\n${message}`;
+
+      if (!supabaseConfigured) {
+        if (submitButton) {
+          submitButton.disabled = true;
+          submitButton.textContent = 'Opening email…';
+        }
+        openMailTo('Quick enquiry', emailBody);
+        return;
+      }
+
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !session) {
+        if (submitButton) {
+          submitButton.disabled = true;
+          submitButton.textContent = 'Opening email…';
+        }
+        openMailTo('Quick enquiry', emailBody);
+        return;
+      }
+
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Sending…';
+      }
+
+      const { error } = await supabase.from('bookings').insert({
+        owner_id: session.user.id,
+        service: 'Quick enquiry',
+        project_title: 'Quick enquiry',
+        business: null,
+        preferred_date: new Date().toISOString().slice(0, 10),
+        preferred_time: 'Flexible',
+        project_format: 'Quick enquiry',
+        brief: message,
+        contact_name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'Customer',
+        contact_email: session.user.email || null,
+        contact_phone: session.user.user_metadata?.phone || 'Not provided'
+      });
+
+      if (error) {
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.textContent = 'Send via email';
+        }
+        openMailTo('Quick enquiry', emailBody);
+        return;
+      }
+
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Sent';
+      }
+
+      textarea.value = '';
+      textarea.placeholder = 'Your message has been sent to the admin portal.';
+    });
+  }
+
+  const voiceMessageForm = document.getElementById('voice-message-form');
+  if (voiceMessageForm) {
+    const callbackPhone = document.getElementById('callback-phone');
+    const voiceNoteMessage = document.getElementById('voice-note-message');
+    const recordToggle = document.getElementById('voice-record-toggle');
+    const stopButton = document.getElementById('voice-stop');
+    const audioPreview = document.getElementById('voice-preview');
+    const voiceSubmit = document.getElementById('voice-submit-button');
+    const voiceStatus = document.getElementById('voice-status');
+
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let audioBlob = null;
+    let stream = null;
+
+    const setVoiceStatus = (message) => {
+      if (voiceStatus) voiceStatus.textContent = message;
+    };
+
+    const resetVoiceState = () => {
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+        stream = null;
+      }
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+      mediaRecorder = null;
+      recordToggle.hidden = false;
+      stopButton.hidden = true;
+    };
+
+    recordToggle.addEventListener('click', async () => {
+      const phoneValue = callbackPhone.value.trim();
+      if (!phoneValue) {
+        callbackPhone.focus();
+        callbackPhone.reportValidity();
+        setVoiceStatus('Please add the callback phone number before recording.');
+        return;
+      }
+
+      if (!window.MediaRecorder) {
+        setVoiceStatus('This browser does not support recording. Please use email or call us instead.');
+        return;
+      }
+
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        setVoiceStatus('This browser does not allow microphone access. Please use email or call us instead.');
+        return;
+      }
+
+      try {
+        setVoiceStatus('Microphone access granted. Recording in progress...');
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioChunks = [];
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) audioChunks.push(event.data);
+        };
+        mediaRecorder.onstop = () => {
+          audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
+          const url = URL.createObjectURL(audioBlob);
+          audioPreview.src = url;
+          audioPreview.hidden = false;
+          voiceSubmit.disabled = false;
+          recordToggle.hidden = false;
+          stopButton.hidden = true;
+          setVoiceStatus('Voice message ready. Review it and tap Send voice message.');
+          resetVoiceState();
+        };
+        mediaRecorder.start();
+        recordToggle.hidden = true;
+        stopButton.hidden = false;
+      } catch {
+        setVoiceStatus('Microphone access is blocked. Please allow the mic and try again.');
+      }
+    });
+
+    stopButton.addEventListener('click', () => {
+      if (!mediaRecorder || mediaRecorder.state === 'inactive') return;
+      setVoiceStatus('Stopping recording...');
+      mediaRecorder.stop();
+    });
+
+    voiceMessageForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const phoneValue = callbackPhone.value.trim();
+      const noteValue = voiceNoteMessage ? voiceNoteMessage.value.trim() : '';
+      if (!phoneValue || !audioBlob) {
+        if (!phoneValue) callbackPhone.focus();
+        return;
+      }
+
+      if (!supabaseConfigured) {
+        alert('The admin portal is not connected right now. Please use the email or phone contact instead.');
+        return;
+      }
+
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !session) {
+        showSignInModal();
+        return;
+      }
+
+      voiceSubmit.disabled = true;
+      voiceSubmit.textContent = 'Sending…';
+
+      try {
+        const path = `voicemail/${session.user.id}/${Date.now()}.webm`;
+        const { error: uploadError } = await supabase.storage.from('customer-documents').upload(path, audioBlob, {
+          contentType: 'audio/webm',
+          upsert: false
+        });
+
+        if (uploadError) {
+          throw uploadError;
+        }
+
+        const { data: signedUrlData, error: signedUrlError } = await supabase.storage.from('customer-documents').createSignedUrl(path, 3600);
+        const signedUrl = signedUrlData?.signedUrl || '';
+        if (signedUrlError) throw signedUrlError;
+
+        const detailNote = [
+          'Voice callback request',
+          `Phone: ${phoneValue}`,
+          noteValue ? `Note: ${noteValue}` : 'Note: Customer left a voice message for follow-up.',
+          `Audio link: ${signedUrl || 'Not available yet.'}`
+        ].join('\n');
+
+        const { error: bookingError } = await supabase.from('bookings').insert({
+          owner_id: session.user.id,
+          service: 'Phone callback',
+          project_title: 'Voice message request',
+          business: 'Voice callback',
+          preferred_date: new Date().toISOString().slice(0, 10),
+          preferred_time: 'Flexible',
+          project_format: 'Voice note',
+          brief: detailNote,
+          contact_name: session.user.user_metadata?.full_name || 'Voice request',
+          contact_email: session.user.email || null,
+          contact_phone: phoneValue,
+          status: 'requested'
+        });
+
+        if (bookingError) throw bookingError;
+
+        voiceSubmit.textContent = 'Sent to admin portal';
+        voiceSubmit.disabled = true;
+        callbackPhone.value = '';
+        voiceNoteMessage.value = '';
+        audioPreview.hidden = true;
+        audioBlob = null;
+        setVoiceStatus('Your voice message has been sent to the admin portal. They can review it and call you back.');
+      } catch (error) {
+        voiceSubmit.disabled = false;
+        voiceSubmit.textContent = 'Send voice message';
+        alert(`Could not send the voice message: ${error.message || 'Unknown error'}`);
+      }
+    });
+  }
+
   const forms = document.querySelectorAll('form[data-form="quote"]');
   forms.forEach((form) => {
-    form.addEventListener('submit', (event) => {
+    const questions = Array.from(form.querySelectorAll('.question-item'));
+    const submitButton = form.querySelector('button[type="submit"]');
+    const progressLabel = form.querySelector('.quote-progress-label');
+    const progressBar = form.querySelector('.quote-progress-track');
+    const progressFill = progressBar?.querySelector('span');
+
+    const updateProgress = (stepIndex) => {
+      const step = stepIndex + 1;
+      if (progressLabel) progressLabel.textContent = `Step ${step} of ${questions.length}`;
+      progressBar?.setAttribute('aria-valuenow', String(step));
+      if (progressFill) progressFill.style.width = `${(step / questions.length) * 100}%`;
+    };
+
+    const hasRequiredValue = (field) => !field.required || field.value.trim() !== '';
+
+    const setNextState = (currentItem) => {
+      const nextButton = currentItem?.querySelector('.button-next');
+      const fields = currentItem?.querySelectorAll('input, select, textarea') ?? [];
+      const hasValue = Array.from(fields).every(hasRequiredValue);
+      if (nextButton) {
+        nextButton.disabled = !hasValue;
+      }
+    };
+
+    const goNext = () => {
+      const visibleIndex = questions.findIndex((item) => !item.hidden);
+      const currentItem = visibleIndex >= 0 ? questions[visibleIndex] : null;
+      const nextItem = currentItem ? questions[visibleIndex + 1] : null;
+
+      if (currentItem) {
+        currentItem.hidden = true;
+      }
+
+      if (nextItem) {
+        nextItem.hidden = false;
+        updateProgress(visibleIndex + 1);
+        const nextField = nextItem.querySelector('input, select, textarea');
+        nextField?.focus();
+        setNextState(nextItem);
+      } else if (submitButton) {
+        submitButton.hidden = false;
+        submitButton.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    };
+
+    questions.forEach((item) => {
+      const field = item.querySelector('input, select, textarea');
+      const nextButton = item.querySelector('.button-next');
+
+      const updateState = () => {
+        const fields = item.querySelectorAll('input, select, textarea');
+        const hasValue = Array.from(fields).every(hasRequiredValue);
+        if (nextButton) nextButton.disabled = !hasValue;
+      };
+
+      field?.addEventListener('input', updateState);
+      field?.addEventListener('change', updateState);
+
+      nextButton?.addEventListener('click', () => {
+        if (field && field.required && field.value.trim() === '') return;
+        if (item === questions[questions.length - 1] && submitButton) {
+          form.requestSubmit();
+          return;
+        }
+        goNext();
+      });
+    });
+
+    const firstField = questions[0]?.querySelector('input, select, textarea');
+    updateProgress(0);
+    firstField?.focus();
+    setNextState(questions[0]);
+
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
       const button = form.querySelector('button[type="submit"]');
       const message = form.querySelector('.form-message');
+      const name = form.querySelector('#name')?.value.trim();
+      const service = form.querySelector('#service')?.value.trim();
+      const company = form.querySelector('#company')?.value.trim();
+      const budget = form.querySelector('#budget')?.value.trim();
+      const details = form.querySelector('#message')?.value.trim();
+
+      if (!name || !service || !details) {
+        if (message) message.textContent = 'Please complete the required contact details before sending.';
+        return;
+      }
+
+      const emailBody = [
+        `Name: ${name}`,
+        `Service: ${service}`,
+        `Company: ${company || 'Not provided'}`,
+        `Budget: ${budget || 'Not provided'}`,
+        '',
+        'Project details:',
+        details
+      ].join('\n');
+
+      if (!supabaseConfigured) {
+        if (button) {
+          button.disabled = false;
+          button.textContent = 'Send request';
+        }
+        if (message) {
+          message.textContent = 'The admin portal is not configured right now. Please try again later or use the quick contact option below.';
+        }
+        return;
+      }
+
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !session) {
+        if (button) {
+          button.disabled = false;
+          button.textContent = 'Send request';
+        }
+        if (message) {
+          message.textContent = 'Please sign in before sending your request to the admin portal.';
+        }
+        return;
+      }
+
+      if (button) {
+        button.disabled = true;
+        button.textContent = 'Sending…';
+      }
+
+      const { error } = await supabase.from('bookings').insert({
+        owner_id: session.user.id,
+        service,
+        project_title: company || name,
+        business: company || null,
+        preferred_date: new Date().toISOString().slice(0, 10),
+        preferred_time: 'Flexible',
+        project_format: budget || 'To be agreed',
+        brief: `${details}\n\nBudget: ${budget || 'Not provided'}\nBusiness/brand: ${company || 'Not provided'}`,
+        contact_name: name,
+        contact_email: session.user.email || null,
+        contact_phone: session.user.user_metadata?.phone || 'Not provided'
+      });
+
+      if (error) {
+        if (button) {
+          button.disabled = false;
+          button.textContent = 'Send request';
+        }
+        if (message) {
+          message.textContent = `Could not send to the admin portal: ${error.message}. Please try again in a moment.`;
+        }
+        return;
+      }
+
+      const successCard = form.parentElement?.querySelector('.contact-success');
+      if (successCard) {
+        form.hidden = true;
+        successCard.hidden = false;
+        successCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
 
       if (button) {
         button.disabled = true;
@@ -734,7 +1129,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (message) {
-        message.textContent = 'Thank you — your request has been received. We will get back to you shortly.';
+        message.textContent = 'Thank you — your request has been sent to the admin portal and we will get back to you shortly.';
       }
     });
   });

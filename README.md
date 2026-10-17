@@ -9,7 +9,7 @@ npm install
 npm run dev
 ```
 
-Open the local URL printed by Vite. Run `npm run build` to create production output in `dist/`.
+Open the local URL printed by Vite (for example, `http://localhost:5173/contact.html`). Do not open the HTML files directly with `file://`: this site uses JavaScript modules and bundled assets that require a web server. A browser MIME-type error for a module script usually means the page was opened directly instead of through Vite. Run `npm run build` to create production output in `dist/`.
 
 ## Supabase
 

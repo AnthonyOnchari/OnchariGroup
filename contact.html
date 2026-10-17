@@ -40,127 +40,234 @@
     </header>
 
     <main>
-      <section class="section">
-        <div class="container">
-          <div class="section-header">
-            <div>
-              <span class="kicker">Get in touch</span>
-              <h2>Request a quote or place an order.</h2>
-            </div>
-            <p class="section-copy">Tell us what you need and we will guide you on the right package, timeline and next steps.</p>
+      <section class="section contact-page">
+        <div class="container contact-plain">
+          <div class="contact-intro">
+            <span class="kicker">Contact</span>
+            <h2>Let’s talk about your project.</h2>
+            <p>Tell us what you have in mind. We’ll help you figure out the best next step.</p>
           </div>
 
           <div class="contact-layout">
-            <div class="info-card">
-              <img class="contact-photo" src="assets/production-team.jpg" alt="Onchari Group crew preparing a production" loading="lazy" />
-              <h3>Let’s talk about your project</h3>
-              <p>Whether you need a website, media production, a property marketing package or a website refresh, Onchari Group can help.</p>
-
-              <ul class="contact-list">
-                <li>
-                  <span class="label">Email</span>
-                  <a class="value" href="mailto:oncharigroup@gmail.com">oncharigroup@gmail.com</a>
-                </li>
-                <li>
-                  <span class="label">Phone</span>
-                  <a class="value" href="tel:+254750600715">+254 750 600 715</a>
-                </li>
-                <li>
-                  <span class="label">Location</span>
-                  <span class="value">Utawala, Nairobi, Kenya</span>
-                </li>
-                <li>
-                  <span class="label">Follow</span>
-                  <span class="value contact-socials"><a class="social-icon social-facebook" href="https://www.facebook.com/oncharigroup" target="_blank" rel="noopener noreferrer" aria-label="Facebook">f</a><a class="social-icon social-instagram" href="https://www.instagram.com/oncharigroup" target="_blank" rel="noopener noreferrer" aria-label="Instagram">◎</a><a class="social-icon social-tiktok" href="https://www.tiktok.com/@oncharigroup?is_from_webapp=1&amp;sender_device=pc" target="_blank" rel="noopener noreferrer" aria-label="TikTok">♪</a></span>
-                </li>
-              </ul>
-            </div>
-
             <div class="form-card">
               <form data-form="quote">
-                <div class="field">
-                  <label for="name">Full name</label>
-                  <input id="name" type="text" placeholder="Your name" required />
+                <div class="quote-form-intro">
+                  <h3>Request a quote</h3>
+                  <p>Answer a few quick questions so we can understand your project.</p>
+                  <div class="quote-progress">
+                    <span class="quote-progress-label" aria-live="polite">Step 1 of 5</span>
+                    <div class="quote-progress-track" role="progressbar" aria-label="Quote request progress" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1">
+                      <span></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="question-item" data-step="1">
+                  <div class="field">
+                    <label for="name">Full name</label>
+                    <input id="name" type="text" placeholder="Your name" required />
+                  </div>
+                  <button class="button button-next" type="button" disabled>Next</button>
                 </div>
 
-                <div class="field">
-                  <label for="company">Business or brand</label>
-                  <input id="company" type="text" placeholder="Business name" />
+                <div class="question-item" data-step="2" hidden>
+                  <div class="field">
+                    <label for="service">Service needed</label>
+                    <select id="service" required>
+                      <option value="">Select a service</option>
+                      <option>Website design</option>
+                      <option>Photography</option>
+                      <option>Videography</option>
+                      <option>Branding / Social media</option>
+                      <option>Real estate marketing</option>
+                      <option>Custom project</option>
+                    </select>
+                  </div>
+                  <button class="button button-next" type="button" disabled>Next</button>
                 </div>
 
-                <div class="field">
-                  <label for="service">Service needed</label>
-                  <select id="service">
-                    <option>Website design</option>
-                    <option>Photography</option>
-                    <option>Videography</option>
-                    <option>Branding / Social media</option>
-                    <option>Real estate marketing</option>
-                    <option>Custom project</option>
-                  </select>
+                <div class="question-item" data-step="3" hidden>
+                  <div class="field">
+                    <label for="company">Business or brand</label>
+                    <input id="company" type="text" placeholder="Business name" />
+                  </div>
+                  <button class="button button-next" type="button" disabled>Next</button>
                 </div>
 
-                <div class="field">
-                  <label for="budget">Budget range</label>
-                  <select id="budget">
-                    <option>KES 15,000 – 30,000</option>
-                    <option>KES 30,000 – 60,000</option>
-                    <option>KES 60,000 – 120,000</option>
-                    <option>Custom / not sure yet</option>
-                  </select>
+                <div class="question-item" data-step="4" hidden>
+                  <div class="field">
+                    <label for="budget">Budget range</label>
+                    <select id="budget" required>
+                      <option value="">Select a range</option>
+                      <option>KES 15,000 – 30,000</option>
+                      <option>KES 30,000 – 60,000</option>
+                      <option>KES 60,000 – 120,000</option>
+                      <option>Custom / not sure yet</option>
+                    </select>
+                  </div>
+                  <button class="button button-next" type="button" disabled>Next</button>
                 </div>
 
-                <div class="field">
-                  <label for="message">Project details</label>
-                  <textarea id="message" placeholder="Tell us about your project, timeline and what you need help with." required></textarea>
+                <div class="question-item" data-step="5" hidden>
+                  <div class="field">
+                    <label for="message">Project details</label>
+                    <textarea id="message" placeholder="Tell us about your project, timeline and what you need help with." required></textarea>
+                  </div>
+                  <button class="button button-next" type="submit">Send request</button>
                 </div>
 
-                <button class="button" type="submit">Send request</button>
+                <button class="button" type="submit" hidden>Send request</button>
                 <div class="form-message" aria-live="polite"></div>
+                <div id="quote-success" class="contact-success" hidden>
+                  <h4>Request received</h4>
+                  <p>Your enquiry has been sent to the admin portal. We usually reply within 30 minutes during working hours.</p>
+                  <div class="success-actions">
+                    <a href="tel:+254750600715" class="button button-small">Call now</a>
+                    <a href="https://wa.me/254750600715?text=Hello%20Onchari%20Group%2C%20I%20just%20sent%20a%20contact%20request%20from%20your%20website." target="_blank" rel="noopener noreferrer" class="button button-small button-secondary">WhatsApp</a>
+                  </div>
+                </div>
               </form>
             </div>
+
+            <aside class="info-card">
+              <h3>Talk with our team</h3>
+
+              <div class="contact-trust">
+                <span class="contact-trust-badge">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.75a9.25 9.25 0 1 1 0 18.5 9.25 9.25 0 0 1 0-18.5Zm-.92 4.28h1.84v5.69H11.08V7.03Zm0 7.15h1.84v1.84H11.08v-1.84Z"/></svg>
+                  Fast response
+                </span>
+                <p>We usually reply within 30 minutes during business hours. Share your idea and we’ll help you plan the next step.</p>
+              </div>
+
+              <div class="contact-direct-links">
+                <a href="tel:+254750600715"><span>Call us</span><strong>+254 750 600 715</strong></a>
+                <a href="https://wa.me/254750600715?text=Hello%20Onchari%20Group%2C%20I%20would%20like%20to%20discuss%20a%20project." target="_blank" rel="noopener noreferrer"><span>Message us</span><strong>WhatsApp</strong></a>
+              </div>
+
+              <div class="contact-socials">
+                <a href="https://www.facebook.com/oncharigroup" target="_blank" rel="noopener noreferrer" aria-label="Facebook">Facebook</a>
+                <a href="https://www.instagram.com/oncharigroup" target="_blank" rel="noopener noreferrer" aria-label="Instagram">Instagram</a>
+                <a href="https://www.tiktok.com/@oncharigroup?is_from_webapp=1&amp;sender_device=pc" target="_blank" rel="noopener noreferrer" aria-label="TikTok">TikTok</a>
+              </div>
+            </aside>
+
+            <section class="contact-options-card" aria-labelledby="contact-options-title">
+              <div class="contact-panel-heading">
+                <span class="kicker">Prefer another way?</span>
+                <h3 id="contact-options-title">Send us a quick message</h3>
+                <p>Write a note now, or open the callback option if you’d rather talk.</p>
+              </div>
+              <div class="contact-options-grid">
+                <form id="quick-email-form" class="quick-email-form">
+                  <label for="quick-email-message">Your message</label>
+                  <textarea id="quick-email-message" name="message" rows="3" placeholder="Tell us a little about what you need..." required></textarea>
+                  <div class="quick-message-actions">
+                    <button class="button quick-email-button" type="submit">
+                      <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.75A2.75 2.75 0 0 1 5.75 4h12.5A2.75 2.75 0 0 1 21 6.75v10.5A2.75 2.75 0 0 1 18.25 20H5.75A2.75 2.75 0 0 1 3 17.25V6.75Zm2.2-.75 6.8 5.38 6.8-5.38H5.2Zm13.05 2.1-6.38 5.08a1 1 0 0 1-1.24 0L5.75 8.1v9.15c0 .41.34.75.75.75h10.98c.41 0 .75-.34.75-.75V8.1Z"/></svg>
+                      <span>Email your message</span>
+                    </button>
+                    <a class="button button-secondary quick-whatsapp-button" href="https://wa.me/254750600715?text=Hello%20Onchari%20Group%2C%20I%20would%20like%20to%20discuss%20a%20project." target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                  </div>
+                </form>
+
+                <details class="callback-details">
+                  <summary>
+                    <span class="callback-summary-copy"><strong>Request a callback</strong><span>Leave your number and a voice note.</span></span>
+                    <span class="faq-icon" aria-hidden="true"></span>
+                  </summary>
+                  <form id="voice-message-form" class="voice-message-form">
+                    <label for="callback-phone">Phone number for callback</label>
+                    <input id="callback-phone" name="callback_phone" type="tel" placeholder="+254 7xx xxx xxx" required />
+
+                    <label for="voice-note-message">Brief note for the team</label>
+                    <textarea id="voice-note-message" name="voice_note" rows="2" placeholder="What would you like us to discuss?"></textarea>
+
+                    <div class="voice-controls">
+                      <button id="voice-record-toggle" class="voice-record-button" type="button" aria-label="Record voice message">
+                        <span class="voice-record-icon">◉</span>
+                        <span>Record a voice note</span>
+                      </button>
+                      <button id="voice-stop" class="voice-stop-button" type="button" hidden>
+                        <span class="voice-record-icon">■</span>
+                        <span>Stop</span>
+                      </button>
+                    </div>
+
+                    <p id="voice-status" class="voice-status" aria-live="polite">Enter your number, then record a message.</p>
+                    <audio id="voice-preview" controls hidden></audio>
+                    <button id="voice-submit-button" class="button" type="submit" disabled>Send callback request</button>
+                  </form>
+                </details>
+              </div>
+            </section>
           </div>
         </div>
       </section>
 
-      <section class="section" style="background: var(--surface); border-top: 1px solid var(--line);">
-        <div class="container">
-          <div class="section-header">
-            <div>
-              <span class="kicker">How it works</span>
-              <h2>Simple process for ordering your project.</h2>
-            </div>
-          </div>
-
-          <div class="order-steps">
-            <div class="order-step">
-              <strong>01</strong>
-              <h3>Share your needs</h3>
-              <p>Send details about your goal, target audience and any examples you like.</p>
-            </div>
-
-            <div class="order-step">
-              <strong>02</strong>
-              <h3>Receive a quote</h3>
-              <p>We review your scope and provide a clear recommendation and quote.</p>
-            </div>
-
-            <div class="order-step">
-              <strong>03</strong>
-              <h3>Launch and support</h3>
-              <p>We deliver the work, refine the final product and keep things moving after launch.</p>
-            </div>
-          </div>
-        </div>
-      </section>
     </main>
+
+    <section class="faq-section section">
+      <div class="container faq-container">
+        <div class="faq-heading">
+          <span class="kicker">FAQ</span>
+          <h2>A few things you might be wondering.</h2>
+          <p>Quick answers to help you feel ready before starting a conversation.</p>
+        </div>
+
+        <div class="faq-list">
+          <details class="faq-item" open>
+            <summary class="faq-question">
+              <span class="faq-number" aria-hidden="true">01</span>
+              <span class="faq-question-text">How quickly do you reply?</span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </summary>
+            <div class="faq-answer">
+              <p>We usually respond within 30 minutes during business hours, and we can also arrange a call if your brief is time-sensitive.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span class="faq-number" aria-hidden="true">02</span>
+              <span class="faq-question-text">Can I send a voice note instead of a long email?</span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </summary>
+            <div class="faq-answer">
+              <p>Yes. You can leave a callback number and record a short voice message. The admin portal can review the note and call you back.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span class="faq-number" aria-hidden="true">03</span>
+              <span class="faq-question-text">Do you work on custom projects?</span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </summary>
+            <div class="faq-answer">
+              <p>Yes. If your project is outside the standard packages, send the details and we will recommend the most practical direction.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span class="faq-number" aria-hidden="true">04</span>
+              <span class="faq-question-text">What should I include in my message?</span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </summary>
+            <div class="faq-answer">
+              <p>Share your goal, timeline, budget range and anything you know about the project. Even a rough idea is enough to start.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
 
     <footer class="site-footer">
       <div class="container">
         <div class="footer-main">
           <div class="footer-brand"><a class="brand" href="index.html" aria-label="Onchari Group home"><img class="brand-logo" src="assets/logo/logo-sil-160.png" alt="" /><span>ONCHARI GROUP</span></a><p>Digital experiences, media and design for businesses ready to grow.</p></div>
           <div class="footer-column"><span class="footer-label">Explore</span><a href="about.html">About us</a><a href="work.html">Our work</a><a href="contact.html">Contact</a><a href="terms.html">Terms &amp; privacy</a></div>
-          <div class="footer-column"><span class="footer-label">Start a conversation</span><a href="mailto:oncharigroup@gmail.com">oncharigroup@gmail.com</a><a href="tel:+254750600715">+254 750 600 715</a><div class="social-icons" aria-label="Social media"><a class="social-icon social-facebook" href="https://www.facebook.com/oncharigroup" target="_blank" rel="noopener noreferrer" aria-label="Facebook">f</a><a class="social-icon social-instagram" href="https://www.instagram.com/oncharigroup" target="_blank" rel="noopener noreferrer" aria-label="Instagram">◎</a><a class="social-icon social-tiktok" href="https://www.tiktok.com/@oncharigroup?is_from_webapp=1&amp;sender_device=pc" target="_blank" rel="noopener noreferrer" aria-label="TikTok">♪</a></div><span>Utawala, Nairobi, Kenya</span></div>
+          <div class="footer-column"><span class="footer-label">Start a conversation</span><div class="social-icons" aria-label="Social media"><a class="social-icon social-facebook" href="https://www.facebook.com/oncharigroup" target="_blank" rel="noopener noreferrer" aria-label="Facebook">Facebook</a><a class="social-icon social-instagram" href="https://www.instagram.com/oncharigroup" target="_blank" rel="noopener noreferrer" aria-label="Instagram">Instagram</a><a class="social-icon social-tiktok" href="https://www.tiktok.com/@oncharigroup?is_from_webapp=1&amp;sender_device=pc" target="_blank" rel="noopener noreferrer" aria-label="TikTok">TikTok</a></div><span>Utawala, Nairobi, Kenya</span></div>
         </div>
         <div class="footer-row"><span>© <span id="year"></span> Onchari Group. All rights reserved.</span></div>
       </div>
