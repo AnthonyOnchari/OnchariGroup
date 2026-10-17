@@ -41,6 +41,61 @@ document.addEventListener('DOMContentLoaded', () => {
     style: 'currency', currency: 'KES', maximumFractionDigits: 0
   }).format(value);
 
+  const isVoiceRequest = (booking) => {
+    const brief = String(booking?.brief || '');
+    const format = String(booking?.project_format || '');
+    return format.toLowerCase().includes('voice') || /voice message|voice note|callback/i.test(brief);
+  };
+
+  const getVoiceUrl = (booking) => {
+    const brief = String(booking?.brief || '');
+    const matches = [...brief.matchAll(/https?:\/\/[^\s)]+/gi)];
+    return matches.find((entry) => /\.(webm|mp3|wav|ogg|m4a|aac)(?:[?#].*)?$/i.test(entry[0]))?.[0]
+      || matches[0]?.[0]
+      || '';
+  };
+
+  const getVoiceNoteText = (booking) => {
+    const brief = String(booking?.brief || '');
+    const cleaned = brief
+      .replace(/Audio link:\s*https?:\/\/[^\s]+/gi, '')
+      .replace(/Voice message recorded for callback\.?\s*Phone:\s*[^.]+\.?/i, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    return cleaned || 'Customer left a voice note for a callback.';
+  };
+
+  const renderVoiceNote = (booking) => {
+    const summary = document.getElementById('admin-booking-summary');
+    const voiceCard = document.createElement('div');
+    voiceCard.className = 'admin-voice-note';
+    appendText(voiceCard, 'h4', '', 'Voice callback note');
+
+    const noteText = getVoiceNoteText(booking);
+    appendText(voiceCard, 'p', 'admin-voice-note-copy', noteText);
+
+    const audioUrl = getVoiceUrl(booking);
+    if (audioUrl) {
+      const audio = document.createElement('audio');
+      audio.controls = true;
+      audio.preload = 'metadata';
+      audio.src = audioUrl;
+      audio.setAttribute('aria-label', 'Customer voice note playback');
+      voiceCard.appendChild(audio);
+    }
+
+    const callbackPhoneText = booking.contact_phone || String(booking?.brief || '').match(/Phone:\s*([0-9+\s()-]+)/i)?.[1]?.trim() || '';
+    if (callbackPhoneText) {
+      const callLink = document.createElement('a');
+      callLink.href = `tel:${callbackPhoneText.replace(/\s+/g, '')}`;
+      callLink.className = 'admin-call-link';
+      callLink.textContent = `Call back ${callbackPhoneText}`;
+      voiceCard.appendChild(callLink);
+    }
+
+    summary.appendChild(voiceCard);
+  };
+
   const makeDocumentNumber = (booking, kind) => `OG-${booking.reference}-${kind}-${Date.now().toString(36).toUpperCase()}`;
 
   const createPdfBlob = ({ booking, type, docNumber, amount, dueDate, paymentReference, paymentDate }) => {
@@ -288,7 +343,11 @@ document.addEventListener('DOMContentLoaded', () => {
     appendText(summary, 'h3', '', booking.project_title || booking.service);
     appendText(summary, 'p', '', `${booking.contact_name} · ${booking.contact_email} · ${booking.contact_phone}`);
     appendText(summary, 'p', '', `${booking.service} · ${formatDate(booking.preferred_date)} · ${booking.preferred_time} · ${booking.project_format}`);
-    appendText(summary, 'p', 'admin-brief', booking.brief);
+    if (isVoiceRequest(booking)) {
+      renderVoiceNote(booking);
+    } else {
+      appendText(summary, 'p', 'admin-brief', booking.brief);
+    }
     renderDocumentHistory();
 
     const hasAcceptedEstimate = booking.documents?.some((item) => item.doc_type === 'estimate' && item.status === 'accepted');

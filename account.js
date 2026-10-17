@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const conversationForm = document.getElementById('conversation-form');
   const conversationInput = document.getElementById('conversation-message');
   const staffLink = document.getElementById('staff-workspace-link');
+  const profileSectionLink = document.querySelector('.account-section-nav a[href="#profile-card"]');
   let session = null;
   let activeBooking = null;
   let messageChannel = null;
@@ -323,6 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
     editingProfile = editingProfile && complete;
     document.getElementById('profile-summary').hidden = !complete || editingProfile;
     document.getElementById('profile-card').hidden = complete && !editingProfile;
+    if (profileSectionLink) profileSectionLink.href = complete && !editingProfile ? '#profile-summary' : '#profile-card';
     if (run !== renderRun) return;
     await Promise.all([renderBookings(), renderSaved()]);
   };
@@ -350,6 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
     editingProfile = true;
     document.getElementById('profile-summary').hidden = true;
     document.getElementById('profile-card').hidden = false;
+    if (profileSectionLink) profileSectionLink.href = '#profile-card';
     setStatus(document.getElementById('profile-status'), '');
   });
 
@@ -378,12 +381,22 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById('google-sign-in').addEventListener('click', async () => {
+    const button = document.getElementById('google-sign-in');
+    button.disabled = true;
     setStatus(authStatus, 'Redirecting to Google…');
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: new URL('account.html', window.location.href).href }
-    });
-    if (error) setStatus(authStatus, error.message, true);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: new URL('account.html', window.location.href).href }
+      });
+      if (error) {
+        setStatus(authStatus, error.message, true);
+        button.disabled = false;
+      }
+    } catch (error) {
+      setStatus(authStatus, error instanceof Error ? error.message : 'Unable to start Google sign-in. Please try again.', true);
+      button.disabled = false;
+    }
   });
 
   document.getElementById('account-sign-out').addEventListener('click', async () => {
@@ -426,11 +439,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!supabaseConfigured) {
     setupNotice.hidden = false;
+    authPanel.hidden = true;
     return;
+  }
+
+  const callbackParams = new URLSearchParams(window.location.search);
+  const callbackHash = new URLSearchParams(window.location.hash.slice(1));
+  const callbackError = callbackParams.get('error_description')
+    || callbackHash.get('error_description')
+    || callbackParams.get('error')
+    || callbackHash.get('error');
+  if (callbackError) {
+    setStatus(authStatus, callbackError.replace(/\+/g, ' '), true);
+    for (const key of ['error', 'error_code', 'error_description', 'error_uri']) {
+      callbackParams.delete(key);
+      callbackHash.delete(key);
+    }
+    const query = callbackParams.toString();
+    const hash = callbackHash.toString();
+    window.history.replaceState(null, '', `${window.location.pathname}${query ? `?${query}` : ''}${hash ? `#${hash}` : ''}`);
   }
 
   supabase.auth.onAuthStateChange((_event, currentSession) => {
     window.setTimeout(() => renderSession(currentSession), 0);
   });
-  supabase.auth.getSession().then(({ data }) => renderSession(data.session));
+  supabase.auth.getSession().then(({ data, error }) => {
+    if (error) setStatus(authStatus, error.message, true);
+    return renderSession(data.session);
+  }).catch((error) => {
+    setStatus(authStatus, error instanceof Error ? error.message : 'Unable to check your sign-in status. Please reload and try again.', true);
+  });
 });

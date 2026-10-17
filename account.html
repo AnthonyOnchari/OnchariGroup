@@ -39,32 +39,61 @@
             <p>Contact <a href="mailto:oncharigroup@gmail.com">Onchari Group</a> to activate account access. No account details are collected until the connection is configured.</p>
           </div>
 
-          <section id="account-auth-panel" class="account-auth-panel" aria-labelledby="account-auth-title" hidden>
+          <section id="account-auth-panel" class="account-auth-panel" aria-labelledby="account-auth-title">
             <div class="account-auth-copy">
-              <span class="booking-step-label">Secure customer account</span>
-              <h2 id="account-auth-title">Sign in or create your account</h2>
-              <p>Use your Google account to sign in or create your account.</p>
+              <div class="account-auth-visual">
+                <img src="assets/image.jpg" alt="Woman smiling while using her phone at home" decoding="async" />
+                <div class="account-auth-visual-caption">
+                  <span>ONCHARI GROUP</span>
+                  <h1 id="account-auth-title">Your projects, all in one place.</h1>
+                  <p>Keep conversations, updates and files close as your ideas move forward.</p>
+                </div>
+              </div>
             </div>
             <div class="account-auth-controls">
-              <button id="google-sign-in" class="button-ghost google-sign-in" type="button"><span aria-hidden="true">G</span> Continue with Google</button>
+              <div class="account-auth-prompt">
+                <span class="account-kicker">Secure sign in</span>
+                <h2>Log in to Onchari Group</h2>
+                <p>Sign in to your workspace or create an account with Google.</p>
+              </div>
+              <button id="google-sign-in" class="button-ghost google-sign-in" type="button">
+                <svg class="google-sign-in-logo" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+                  <path fill="#4285F4" d="M43.611 20.083H42V20H24v8h11.303C33.653 32.657 29.223 36 24 36c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.045 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.651-.389-3.917z" />
+                  <path fill="#34A853" d="M6.306 14.691 12.885 19.51C14.665 15.11 18.969 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.045 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z" />
+                  <path fill="#FBBC05" d="M24 44c5.17 0 9.794-1.704 13.058-4.632l-6.033-5.1C29.268 35.99 26.763 36 24 36c-5.2 0-9.61-3.32-11.28-7.96l-6.53 5.03C9.5 39.42 16.2 44 24 44z" />
+                  <path fill="#EA4335" d="M12.72 28.04A12.04 12.04 0 0 1 12 24c0-1.4.24-2.75.69-4.01l-6.38-5.3A19.92 19.92 0 0 0 4 24c0 3.2.75 6.22 2.19 8.89l6.53-4.85z" />
+                </svg>
+                <span>Continue with Google</span>
+                <span class="google-sign-in-arrow" aria-hidden="true">→</span>
+              </button>
               <p id="account-auth-status" class="form-message" role="status" aria-live="polite"></p>
+              <p class="account-auth-footnote">Your account information is only visible to you and the Onchari team.</p>
             </div>
           </section>
 
           <section id="account-dashboard" class="account-dashboard" hidden>
-            <div class="account-dashboard-heading">
+            <div id="account-overview" class="account-dashboard-heading">
               <div>
-                <span class="booking-step-label">Signed in</span>
-                <h2 id="account-welcome">Your bookings</h2>
+                <span class="account-kicker"><span class="account-online-dot" aria-hidden="true"></span> Your private workspace</span>
+                <h1 id="account-welcome">Welcome back</h1>
+                <p>Keep up with your projects, messages and files from here.</p>
               </div>
               <div class="account-dashboard-actions">
+                <a class="button account-new-booking" href="booking.html"><span aria-hidden="true">＋</span> Start a project</a>
                 <a id="staff-workspace-link" class="button-ghost" href="admin.html" hidden>Staff workspace</a>
                 <button id="account-sign-out" class="button-ghost" type="button">Sign out</button>
               </div>
             </div>
             <p id="account-dashboard-status" class="form-message" role="status" aria-live="polite"></p>
             <div class="profile-signed-in"><span class="profile-dot" aria-hidden="true"></span><span id="profile-signed-in-text">Signed in</span></div>
-            <section id="profile-summary" class="profile-summary" aria-label="Your dashboard" hidden>
+            <nav class="account-section-nav" aria-label="Account sections">
+              <a href="#account-overview">Overview</a>
+              <a href="#profile-card">Your profile</a>
+              <a href="#account-projects">Projects</a>
+              <a href="#account-purchases-section">Payments &amp; receipts</a>
+              <a href="#account-saved-section">Saved requests</a>
+            </nav>
+            <section id="profile-summary" class="profile-summary" aria-label="Account overview" hidden>
               <div class="profile-summary-head">
                 <div class="profile-avatar-wrap"><img id="summary-avatar" class="profile-avatar" alt="" /><span id="summary-flag" class="profile-flag" hidden></span></div>
                 <div class="profile-summary-info">
@@ -74,14 +103,16 @@
                 </div>
                 <div class="profile-summary-actions">
                   <button id="edit-profile" class="button-ghost" type="button">Edit profile</button>
-                  <a class="button" href="booking.html">New booking</a>
+                  <a class="button" href="booking.html">Start a project</a>
                 </div>
               </div>
+            </section>
+            <section class="account-metrics" aria-label="Account activity">
               <div class="admin-stats">
-                <div class="admin-stat"><strong id="stat-bookings">0</strong><span>Bookings</span></div>
-                <div class="admin-stat"><strong id="stat-purchases">0</strong><span>Purchases</span></div>
-                <div class="admin-stat"><strong id="stat-saved">0</strong><span>Saved in cart</span></div>
-                <div class="admin-stat"><strong id="stat-spent">KES 0</strong><span>Total paid</span></div>
+                <div class="admin-stat"><span>PROJECTS</span><strong id="stat-bookings">0</strong><small>Requests in your history</small></div>
+                <div class="admin-stat"><span>PAYMENTS</span><strong id="stat-purchases">0</strong><small>Invoices marked paid</small></div>
+                <div class="admin-stat"><span>SAVED</span><strong id="stat-saved">0</strong><small>Requests to pick up later</small></div>
+                <div class="admin-stat"><span>TOTAL PAID</span><strong id="stat-spent">KES 0</strong><small>Confirmed invoice payments</small></div>
               </div>
             </section>
             <section class="profile-card" id="profile-card" aria-labelledby="profile-title">
@@ -91,7 +122,10 @@
                 <input id="profile-avatar-input" type="file" accept="image/jpeg,image/png,image/webp" hidden />
               </div>
               <form id="profile-form" class="profile-form">
-                <h3 id="profile-title">Your profile</h3>
+                <div class="account-section-heading">
+                  <div><span class="account-kicker">Account details</span><h2 id="profile-title">Complete your profile</h2></div>
+                  <p>Help us keep your project details and updates connected to you.</p>
+                </div>
                 <div class="admin-action-fields">
                   <div class="field"><label for="profile-name">Full name</label><input id="profile-name" type="text" maxlength="80" autocomplete="name" /></div>
                   <div class="field"><label for="profile-username">Username</label><input id="profile-username" type="text" maxlength="30" pattern="[A-Za-z0-9_.]{3,30}" title="3-30 letters, numbers, dots or underscores" autocomplete="username" /></div>
@@ -103,24 +137,24 @@
                 <p id="profile-status" class="form-message" role="status" aria-live="polite"></p>
               </form>
             </section>
-            <div class="account-workspace-grid">
-              <section class="account-history" aria-labelledby="account-saved-title">
-                <h3 id="account-saved-title">Saved cart</h3>
+            <div class="account-workspace-grid account-resource-grid">
+              <section id="account-saved-section" class="account-history account-resource-card" aria-labelledby="account-saved-title">
+                <div class="account-section-heading"><div><span class="account-kicker">Pick up where you left off</span><h2 id="account-saved-title">Saved requests</h2></div><a class="account-section-link" href="booking.html">Browse services <span aria-hidden="true">→</span></a></div>
                 <div id="account-saved" class="account-bookings"></div>
               </section>
-              <section class="account-history" aria-labelledby="account-purchases-title">
-                <h3 id="account-purchases-title">Purchase history</h3>
+              <section id="account-purchases-section" class="account-history account-resource-card" aria-labelledby="account-purchases-title">
+                <div class="account-section-heading"><div><span class="account-kicker">Your project finances</span><h2 id="account-purchases-title">Payments &amp; receipts</h2></div><a class="account-section-link" href="terms.html">View terms <span aria-hidden="true">→</span></a></div>
                 <div id="account-purchases" class="account-bookings"></div>
               </section>
             </div>
-            <div class="account-workspace-grid">
-              <section class="account-history" aria-labelledby="account-history-title">
-                <h3 id="account-history-title">Project history</h3>
+            <div id="account-projects" class="account-workspace-grid account-projects-grid">
+              <section class="account-history account-resource-card" aria-labelledby="account-history-title">
+                <div class="account-section-heading"><div><span class="account-kicker">Work in progress and past requests</span><h2 id="account-history-title">Project history</h2></div><a class="account-section-link" href="contact.html">Need something else? <span aria-hidden="true">→</span></a></div>
                 <div id="account-bookings" class="account-bookings"></div>
               </section>
-              <section id="account-conversation" class="account-conversation" aria-labelledby="conversation-title" hidden>
+              <section id="account-conversation" class="account-conversation account-resource-card" aria-labelledby="conversation-title" hidden>
                 <div class="account-conversation-heading">
-                  <div><span class="booking-step-label">Project messages</span><h3 id="conversation-title">Conversation</h3></div>
+                  <div><span class="account-kicker">Project messages</span><h2 id="conversation-title">Conversation</h2></div>
                   <button id="close-conversation" class="icon-close" type="button" aria-label="Close conversation">&times;</button>
                 </div>
                 <div id="conversation-messages" class="conversation-messages" aria-live="polite"></div>
@@ -131,6 +165,10 @@
                 </form>
               </section>
             </div>
+            <aside class="account-help-card">
+              <div><span class="account-kicker">We’re here if you need us</span><h2>Have a question about your project?</h2><p>Message the team from your project history or reach us directly for a hand.</p></div>
+              <div class="account-help-actions"><a href="mailto:oncharigroup@gmail.com" class="button-ghost">Email the team</a><a href="https://wa.me/254750600715" target="_blank" rel="noopener noreferrer" class="button-ghost">Chat on WhatsApp</a></div>
+            </aside>
           </section>
         </div>
       </section>

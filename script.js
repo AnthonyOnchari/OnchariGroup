@@ -965,79 +965,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const forms = document.querySelectorAll('form[data-form="quote"]');
   forms.forEach((form) => {
-    const questions = Array.from(form.querySelectorAll('.question-item'));
-    const submitButton = form.querySelector('button[type="submit"]');
-    const progressLabel = form.querySelector('.quote-progress-label');
-    const progressBar = form.querySelector('.quote-progress-track');
-    const progressFill = progressBar?.querySelector('span');
-
-    const updateProgress = (stepIndex) => {
-      const step = stepIndex + 1;
-      if (progressLabel) progressLabel.textContent = `Step ${step} of ${questions.length}`;
-      progressBar?.setAttribute('aria-valuenow', String(step));
-      if (progressFill) progressFill.style.width = `${(step / questions.length) * 100}%`;
-    };
-
-    const hasRequiredValue = (field) => !field.required || field.value.trim() !== '';
-
-    const setNextState = (currentItem) => {
-      const nextButton = currentItem?.querySelector('.button-next');
-      const fields = currentItem?.querySelectorAll('input, select, textarea') ?? [];
-      const hasValue = Array.from(fields).every(hasRequiredValue);
-      if (nextButton) {
-        nextButton.disabled = !hasValue;
-      }
-    };
-
-    const goNext = () => {
-      const visibleIndex = questions.findIndex((item) => !item.hidden);
-      const currentItem = visibleIndex >= 0 ? questions[visibleIndex] : null;
-      const nextItem = currentItem ? questions[visibleIndex + 1] : null;
-
-      if (currentItem) {
-        currentItem.hidden = true;
-      }
-
-      if (nextItem) {
-        nextItem.hidden = false;
-        updateProgress(visibleIndex + 1);
-        const nextField = nextItem.querySelector('input, select, textarea');
-        nextField?.focus();
-        setNextState(nextItem);
-      } else if (submitButton) {
-        submitButton.hidden = false;
-        submitButton.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-    };
-
-    questions.forEach((item) => {
-      const field = item.querySelector('input, select, textarea');
-      const nextButton = item.querySelector('.button-next');
-
-      const updateState = () => {
-        const fields = item.querySelectorAll('input, select, textarea');
-        const hasValue = Array.from(fields).every(hasRequiredValue);
-        if (nextButton) nextButton.disabled = !hasValue;
-      };
-
-      field?.addEventListener('input', updateState);
-      field?.addEventListener('change', updateState);
-
-      nextButton?.addEventListener('click', () => {
-        if (field && field.required && field.value.trim() === '') return;
-        if (item === questions[questions.length - 1] && submitButton) {
-          form.requestSubmit();
-          return;
-        }
-        goNext();
-      });
-    });
-
-    const firstField = questions[0]?.querySelector('input, select, textarea');
-    updateProgress(0);
-    firstField?.focus();
-    setNextState(questions[0]);
-
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
       const button = form.querySelector('button[type="submit"]');
@@ -1137,34 +1064,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 if (new URLSearchParams(window.location.search).has('embed')) document.documentElement.classList.add('is-embed');
 
-const photoSlides = document.querySelectorAll('.home-team-photo-slide');
-
-if (photoSlides.length === 2 && photoUrls.length > 1) {
-  let current = 0;
-  let front = 0;
-  const showcase = photoSlides[0].parentElement;
-  const frame = (slide, image) => {
-    slide.classList.toggle('is-portrait', image.naturalHeight > image.naturalWidth);
-    showcase.style.setProperty('--slide-bg', `url("${image.src}")`);
-  };
-  if (photoSlides[0].complete && photoSlides[0].naturalWidth) frame(photoSlides[0], photoSlides[0]);
-  else photoSlides[0].addEventListener('load', () => frame(photoSlides[0], photoSlides[0]), { once: true });
-  const showNext = () => {
-    const next = (current + 1) % photoUrls.length;
-    const incoming = photoSlides[1 - front];
-    const loader = new Image();
-    loader.onload = () => {
-      incoming.src = photoUrls[next];
-      frame(incoming, loader);
-      photoSlides[front].classList.remove('is-active');
-      incoming.classList.add('is-active');
-      front = 1 - front;
-      current = next;
-    };
-    loader.src = photoUrls[next];
-  };
-  window.setInterval(showNext, 4500);
-}
 
 const SIGNIN_FLAG = 'og-signin-pending';
 const hasStoredSession = () => Object.keys(localStorage).some((key) => key.startsWith('sb-') && key.endsWith('-auth-token'));
@@ -1200,15 +1099,6 @@ const showSignInModal = () => {
     }
   });
 };
-
-if (document.body.dataset.page !== 'account') {
-  document.addEventListener('click', (event) => {
-    const link = event.target.closest('a[href="account.html"]');
-    if (!link || hasStoredSession() || event.metaKey || event.ctrlKey || event.shiftKey) return;
-    event.preventDefault();
-    showSignInModal();
-  });
-}
 
 document.addEventListener('click', (event) => {
   if (event.target.closest('#google-sign-in')) sessionStorage.setItem(SIGNIN_FLAG, '1');
