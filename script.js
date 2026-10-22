@@ -144,10 +144,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const serviceShowcases = {
     website: { title: 'Website design', samples: [['hero-cover.jpg', 'Brand website', 'A focused digital home for a growing brand.'], ['graphic-design-sample.jpg', 'Campaign landing page', 'Clear design that supports a strong message.'], ['app-development.svg', 'Digital product', 'A considered experience built around the user.']] },
     photography: { title: 'Photography', samples: [['portrait-session.jpg', 'Portrait session', 'Images with warmth, confidence and character.'], ['event-story.jpg', 'Event coverage', 'Visual moments that keep the story moving.'], ['hero-portrait.jpg', 'Production portraits', 'People and process captured with intention.']] },
-    videography: { title: 'Videography', samples: [['hero-portrait.jpg', 'Production story', 'A visual look at the people behind the work.'], ['event-story.jpg', 'Event film', 'Energy and atmosphere shaped into a clear story.'], ['production-team.jpg', 'Brand content', 'Content made to build attention and trust.']] },
+    videography: { title: 'Videography', emptyMessage: 'No videos yet.' },
     property: { title: 'Property marketing', samples: [['production-team.jpg', 'Property campaign', 'A strong visual first impression for a listing.'], ['hero-cover.jpg', 'Property promotion', 'Digital presentation designed to attract attention.'], ['event-story.jpg', 'Location story', 'Details and atmosphere brought forward clearly.']] },
     app: { title: 'App development', samples: [['app-development.svg', 'Chichi app', 'A mobile experience that keeps people connected.'], ['graphic-design-sample.jpg', 'Product interface', 'A clear visual direction for a useful product.'], ['hero-cover.jpg', 'Digital experience', 'A simple path from interest to action.']] },
-    design: { title: 'Poster, logo & graphic design', samples: [['graphic-design-sample.jpg', 'Campaign graphic', 'A memorable visual made for attention.'], ['portrait-session.jpg', 'Brand imagery', 'Photography that gives the identity more life.'], ['app-development.svg', 'Visual system', 'A consistent look across every touchpoint.']] }
+    design: { title: 'Poster, logo & graphic design', emptyMessage: 'Still in development.' }
   };
 
   const websiteSites = [
@@ -172,10 +172,20 @@ document.addEventListener('DOMContentLoaded', () => {
       ? `<div class="website-site-grid">${websiteSites.map(([name, domain, url, preview]) => `<div class="website-site-card" data-url="${url}" data-preview="${preview}" data-name="${name}"><span class="website-site-bar"><i></i><i></i><i></i><span>${domain}</span></span><span class="website-site-preview"><iframe src="${preview}" title="${name} live preview" loading="lazy" tabindex="-1" sandbox="allow-scripts allow-same-origin" referrerpolicy="no-referrer"></iframe></span><span class="website-site-body"><strong>${name}</strong><span class="website-site-actions"><button class="website-site-visit" type="button">Visit site</button><a class="website-site-contact" href="contact.html">Start a conversation</a></span></span></div>`).join('')}</div>`
       : serviceKey === 'photography'
       ? `<div class="service-photo-gallery">${photoThumbUrls.map((url, index) => `<img data-src="${url}" alt="Onchari Group photography ${index + 1}" decoding="async" />`).join('')}</div>`
+      : serviceKey === 'property'
+      ? '<div class="service-tiktok-embed"><blockquote class="tiktok-embed" cite="https://www.tiktok.com/@homeplugkenya" data-unique-id="homeplugkenya" data-embed-type="creator"><section><a target="_blank" rel="noopener noreferrer" href="https://www.tiktok.com/@homeplugkenya">@homeplugkenya</a></section></blockquote></div>'
+      : service.emptyMessage
+      ? `<p class="service-showcase-empty">${service.emptyMessage}</p>`
       : `<div class="service-sample-grid">${service.samples.map(([image, title, copy]) => `<article><div class="service-sample-image"><img src="${assetUrl(image)}" alt="${title}" /></div><h3>${title}</h3><p>${copy}</p></article>`).join('')}</div>`;
     showcase.innerHTML = `<button class="service-showcase-backdrop" type="button" aria-label="Close service showcase"></button><section class="service-showcase-dialog" role="dialog" aria-modal="true" aria-labelledby="service-showcase-title"><button class="service-showcase-close" type="button" aria-label="Close service showcase">&times;</button><span class="kicker">Explore service</span><h2 id="service-showcase-title">${service.title}</h2>${samplesHtml}${serviceKey === 'website' ? '' : '<a class="button" href="contact.html">Start a conversation</a>'}</section>`;
     document.body.appendChild(showcase);
     document.body.classList.add('showcase-open');
+    if (serviceKey === 'property') {
+      const tiktokEmbedScript = document.createElement('script');
+      tiktokEmbedScript.async = true;
+      tiktokEmbedScript.src = 'https://www.tiktok.com/embed.js';
+      showcase.appendChild(tiktokEmbedScript);
+    }
     const gallery = showcase.querySelector('.service-photo-gallery');
     const fitPreviews = () => showcase.querySelectorAll('.website-site-preview').forEach((box) => {
       box.style.setProperty('--preview-scale', String(box.clientWidth / 1280));
